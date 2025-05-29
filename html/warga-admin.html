@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Warga - Admin Desa Banyusri</title>
+  <link rel="stylesheet" href="../style/style-warga-admin.css" />
+  
+</head>
+<body>
+  <header>
+    <h1>Data Pengguna (Warga dan Admin)</h1>
+    <nav>
+      <a href="dashboard-admin.html">Dashboard</a>
+      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
+      <a href="warga-admin.html">Data Warga</a>
+      <a href="../login.html">Keluar</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Daftar Akun Terdaftar</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="user-table-body">
+        <tr><td colspan="4">Memuat data...</td></tr>
+      </tbody>
+    </table>
+    <p id="status"></p>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script>
+    const db = firebase.firestore();
+    const tableBody = document.getElementById("user-table-body");
+    const status = document.getElementById("status");
+
+    function loadUsers() {
+      db.collection("users").get().then(snapshot => {
+        tableBody.innerHTML = "";
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${data.nama}</td>
+            <td>${data.email}</td>
+            <td>${data.role}</td>
+            <td>
+              <button class="btn-hapus" onclick="hapusUser('${doc.id}', '${data.nama}')">Hapus</button>
+            </td>`;
+          tableBody.appendChild(row);
+        });
+      }).catch(err => {
+        tableBody.innerHTML = `<tr><td colspan="4">Gagal memuat data: ${err.message}</td></tr>`;
+      });
+    }
+
+    function hapusUser(uid, nama) {
+      if (confirm(`Yakin ingin menghapus akun ${nama}?`)) {
+        db.collection("users").doc(uid).delete()
+          .then(() => {
+            status.textContent = `Akun ${nama} berhasil dihapus dari database.`;
+            loadUsers();
+          })
+          .catch(err => {
+            status.textContent = "Gagal menghapus: " + err.message;
+          });
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>

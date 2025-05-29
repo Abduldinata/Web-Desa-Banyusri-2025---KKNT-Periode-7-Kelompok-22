@@ -1,0 +1,61 @@
+/* CSS for the announcement page */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background-color: #e3f2fd;
+  color: #333;
+}
+
+header {
+  background-color: #2196f3;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  background-color: #1976d2;
+  padding: 10px 0;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px #ccc;
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: #1565c0;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    ul {
+      margin-left: 20px;
+    }
+
+    footer {
+      background-color: #2196f3;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 30px;
+    }

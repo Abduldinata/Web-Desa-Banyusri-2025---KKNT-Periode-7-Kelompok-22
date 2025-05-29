@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Web Desa Banyusri</title>
+  <link rel="stylesheet" href="../style/style-login.css">
+</head>
+<body>
+  <h1>Login Web Desa Banyusri</h1>
+  <form id="login-form">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" required><br><br>
+
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" required><br><br>
+
+    <button type="submit">Login</button>
+  </form>
+  <p id="login-status"></p>
+  <p>Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+  <p><small>Jika lupa password, hubungi admin desa.</small></p>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

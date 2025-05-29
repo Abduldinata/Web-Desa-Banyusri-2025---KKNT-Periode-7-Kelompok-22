@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kelola Pengumuman - Admin Desa Banyusri</title>
+  <link rel="stylesheet" href="../style/style-pengumuman-admin.css">
+</head>
+<body>
+  <header>
+    <h1>Kelola Pengumuman</h1>
+    <nav>
+      <a href="dashboard-admin.html">Dashboard</a>
+      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
+      <a href="warga-admin.html">Data Warga</a>
+      <a href="login.html">Keluar</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Form Tambah Pengumuman</h2>
+    <form id="form-pengumuman">
+      <label for="judul">Judul:</label><br>
+      <input type="text" id="judul" required><br><br>
+
+      <label for="isi">Isi Pengumuman:</label><br>
+      <textarea id="isi" rows="6" required></textarea><br><br>
+
+      <button type="submit">Posting Pengumuman</button>
+    </form>
+    <p id="status"></p>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script>
+    const db = firebase.firestore();
+    const form = document.getElementById("form-pengumuman");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const judul = document.getElementById("judul").value;
+      const isi = document.getElementById("isi").value;
+
+      db.collection("pengumuman").add({
+        judul: judul,
+        isi: isi,
+        timestamp: new Date()
+      }).then(() => {
+        status.textContent = "Pengumuman berhasil diposting.";
+        form.reset();
+      }).catch(err => {
+        status.textContent = "Gagal: " + err.message;
+      });
+    });
+  </script>
+</body>
+</html>

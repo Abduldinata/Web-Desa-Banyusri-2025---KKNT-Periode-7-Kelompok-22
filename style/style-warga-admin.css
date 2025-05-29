@@ -1,0 +1,94 @@
+/* ======= ADMIN TEMA WARNA ======= */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background-color: #fff3e0; /* oranye muda lembut */
+  color: #333;
+}
+
+header {
+  background-color: #e64a19;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  background-color: #d84315;
+  text-align: center;
+  padding: 10px 0;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+ h2 {
+  color: #bf360c;
+}
+
+/* ======= TABLE STYLING ======= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th {
+  background-color: #d84315;
+  color: white;
+}
+
+th, td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+  background-color: #fff8f1;
+}
+
+tr:hover {
+  background-color: #ffe0b2;
+}
+
+/* ======= BUTTON STYLING ======= */
+.btn-hapus {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.btn-hapus:hover {
+  background-color: #b71c1c;
+}
+
+footer {
+  background-color: #e64a19;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  margin-top: 30px;
+}

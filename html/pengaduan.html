@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengaduan Masyarakat - Desa Banyusri</title>
+  <link rel="stylesheet" href="../style/style-pengaduan.css" />
+  
+</head>
+<body>
+  <header>
+    <h1>Form Pengaduan & Status</h1>
+    <nav>
+      <a href="dashboard.html">Beranda</a>
+      <a href="profil.html">Profil Desa</a>
+      <a href="pengaduan.html">Pengaduan</a>
+      <a href="layanan.html">Layanan Desa</a>
+      <a href="pengumuman.html">Pengumuman</a>
+      <a href="register.html">Daftar</a>
+      <a href="login.html">Keluar</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="form-box">
+      <h2>Kirim Pengaduan Baru</h2>
+      <form id="form-pengaduan">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" required />
+
+        <label for="isi">Isi Pengaduan:</label>
+        <textarea id="isi" rows="6" required></textarea>
+
+        <button type="submit">Kirim Pengaduan</button>
+        <p id="status"></p>
+      </form>
+    </div>
+
+    <div class="riwayat-box">
+      <h2>Riwayat Pengaduan Anda</h2>
+      <div id="riwayat-list">Memuat riwayat...</div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script>
+    const db = firebase.firestore();
+    const form = document.getElementById("form-pengaduan");
+    const status = document.getElementById("status");
+    const riwayatList = document.getElementById("riwayat-list");
+
+    // Simpan pengaduan
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const nama = document.getElementById("nama").value;
+      const isi = document.getElementById("isi").value;
+
+      db.collection("pengaduan").add({
+        nama: nama,
+        isi: isi,
+        timestamp: new Date(),
+        status: "belum dibaca"
+      }).then(() => {
+        status.textContent = "Pengaduan berhasil dikirim!";
+        status.style.color = "green";
+        form.reset();
+        loadRiwayat(nama); // Refresh daftar
+      }).catch(err => {
+        status.textContent = "Gagal: " + err.message;
+        status.style.color = "red";
+      });
+    });
+
+    // Tampilkan daftar pengaduan user berdasarkan nama
+    function loadRiwayat(nama) {
+      db.collection("pengaduan").where("nama", "==", nama).orderBy("timestamp", "desc").get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            riwayatList.innerHTML = "<p>Belum ada pengaduan.</p>";
+            return;
+          }
+
+          let html = "";
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const waktu = data.timestamp.toDate().toLocaleString('id-ID');
+            html += `
+              <div class="pengaduan-item">
+                <p><strong>Isi:</strong> ${data.isi}</p>
+                <p><strong>Status:</strong> <span class="status">${data.status}</span></p>
+                <p><small><em>Dikirim pada: ${waktu}</em></small></p>
+              </div>
+            `;
+          });
+
+          riwayatList.innerHTML = html;
+        })
+        .catch(err => {
+          riwayatList.innerHTML = "<p>Gagal memuat riwayat: " + err.message + "</p>";
+        });
+    }
+
+    // Autoload data berdasarkan nama (opsional bisa dari session)
+    document.getElementById("nama").addEventListener("blur", function () {
+      const nama = this.value.trim();
+      if (nama) loadRiwayat(nama);
+    });
+  </script>
+</body>
+</html>

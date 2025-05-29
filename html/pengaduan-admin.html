@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Pengaduan Masyarakat</title>
+  <link rel="stylesheet" href="../style/style-dashboard-admin.css" />
+</head>
+<body>
+  <header>
+    <h1>Kelola Pengaduan Masyarakat</h1>
+    <nav>
+      <a href="dashboard-admin.html">Dashboard</a>
+      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
+      <a href="layanan-admin.html">Layanan Desa</a>
+      <a href="pengaduan-admin.html">Lihat Pengaduan</a>
+      <a href="warga-admin.html">Data Warga</a>
+      <a href="../login.html">Keluar</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Daftar Pengaduan</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Isi Pengaduan</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="pengaduan-table-body">
+        <tr><td colspan="4">Memuat data...</td></tr>
+      </tbody>
+    </table>
+    <p id="status"></p>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script>
+    const db = firebase.firestore();
+    const tableBody = document.getElementById("pengaduan-table-body");
+
+    function loadPengaduan() {
+      db.collection("pengaduan").get().then(snapshot => {
+        tableBody.innerHTML = "";
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${data.nama}</td>
+            <td>${data.isi}</td>
+            <td>${data.status}</td>
+            <td>
+              <button onclick="ubahStatus('${doc.id}')">Ubah Status</button>
+              <button onclick="hapusPengaduan('${doc.id}')">Hapus</button>
+            </td>`;
+          tableBody.appendChild(row);
+        });
+      }).catch(err => {
+        tableBody.innerHTML = `<tr><td colspan="4">Gagal memuat data: ${err.message}</td></tr>`;
+      });
+    }
+
+    function ubahStatus(id) {
+      const newStatus = prompt("Masukkan status baru (diproses/selesai):");
+      if (newStatus) {
+        db.collection("pengaduan").doc(id).update({ status: newStatus })
+          .then(() => loadPengaduan())
+          .catch(err => alert("Gagal update: " + err.message));
+      }
+    }
+
+    function hapusPengaduan(id) {
+      if (confirm("Yakin ingin menghapus pengaduan ini?")) {
+        db.collection("pengaduan").doc(id).delete()
+          .then(() => loadPengaduan())
+          .catch(err => alert("Gagal hapus: " + err.message));
+      }
+    }
+
+    loadPengaduan();
+  </script>
+</body>
+</html>
+<footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>

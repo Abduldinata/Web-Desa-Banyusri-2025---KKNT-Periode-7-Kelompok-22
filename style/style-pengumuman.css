@@ -1,0 +1,65 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background-color: #e3f2fd;
+  color: #333;
+}
+
+header {
+  background-color: #2196f3;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  background-color: #1976d2;
+  padding: 10px 0;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pengumuman-box {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.pengumuman-box h3 {
+  margin-top: 0;
+  color: #1565c0;
+}
+
+.pengumuman-box .tanggal {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+  display: block;
+}
+
+footer {
+  background-color: #2196f3;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  margin-top: 40px;
+}

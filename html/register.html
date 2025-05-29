@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Pendaftaran Akun - Desa Banyusri</title>
+  <link rel="stylesheet" href="../style/style-register.css">
+</head>
+<body>
+  <h1>Form Pendaftaran Akun</h1>
+  <form id="register-form">
+    <label for="nama">Nama Lengkap:</label><br>
+    <input type="text" id="nama" required><br><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" required><br><br>
+
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" required><br><br>
+
+    <button type="submit">Daftar</button>
+  </form>
+  <p id="register-status"></p>
+  <p>Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

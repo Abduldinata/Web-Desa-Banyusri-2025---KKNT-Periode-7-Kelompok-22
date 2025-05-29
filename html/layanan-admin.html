@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Layanan Desa</title>
+  <link rel="stylesheet" href="../style/style-dashboard-admin.css" />
+</head>
+<body>
+  <header>
+    <h1>Kelola Layanan Desa</h1>
+    <nav>
+      <a href="dashboard-admin.html">Dashboard</a>
+      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
+      <a href="layanan-admin.html">Layanan Desa</a>
+      <a href="pengaduan-admin.html">Lihat Pengaduan</a>
+      <a href="warga-admin.html">Data Warga</a>
+      <a href="../login.html">Keluar</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Daftar Layanan Publik</h2>
+    <button onclick="tambahLayanan()">Tambah Layanan Baru</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Layanan</th>
+          <th>Deskripsi</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="layanan-table-body">
+        <tr><td colspan="3">Memuat data...</td></tr>
+      </tbody>
+    </table>
+    <p id="status"></p>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script>
+    const db = firebase.firestore();
+    const tableBody = document.getElementById("layanan-table-body");
+
+    function loadLayanan() {
+      db.collection("layanan").get().then(snapshot => {
+        tableBody.innerHTML = "";
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${data.nama}</td>
+            <td>${data.deskripsi}</td>
+            <td>
+              <button onclick="hapusLayanan('${doc.id}')">Hapus</button>
+            </td>`;
+          tableBody.appendChild(row);
+        });
+      }).catch(err => {
+        tableBody.innerHTML = `<tr><td colspan="3">Gagal memuat data: ${err.message}</td></tr>`;
+      });
+    }
+
+    function tambahLayanan() {
+      const nama = prompt("Nama layanan baru:");
+      const deskripsi = prompt("Deskripsi layanan:");
+      if (nama && deskripsi) {
+        db.collection("layanan").add({ nama, deskripsi })
+          .then(() => loadLayanan())
+          .catch(err => alert("Gagal tambah: " + err.message));
+      }
+    }
+
+    function hapusLayanan(id) {
+      if (confirm("Yakin ingin menghapus layanan ini?")) {
+        db.collection("layanan").doc(id).delete()
+          .then(() => loadLayanan())
+          .catch(err => alert("Gagal hapus: " + err.message));
+      }
+    }
+
+    loadLayanan();
+  </script>
+</body>
+</html>
+<!-- 
+ --><!--   <footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>

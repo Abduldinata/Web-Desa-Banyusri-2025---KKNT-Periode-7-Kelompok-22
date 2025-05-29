@@ -1,0 +1,60 @@
+      body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: #e3f2fd;
+    color: #333;
+  }
+
+  header {
+    background-color: #2e7d32;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+
+nav {
+  background-color: #388e3c;
+  text-align: center;
+  padding: 10px 0;
+}
+
+
+  nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  main {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+      .layanan-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      margin-bottom: 20px;
+    }
+    .layanan-box h3 {
+      margin-top: 0;
+      color: #2e7d32;
+    }
+    .layanan-box button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin-top: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .layanan-box button:hover {
+      background-color: #388e3c;
+    }
