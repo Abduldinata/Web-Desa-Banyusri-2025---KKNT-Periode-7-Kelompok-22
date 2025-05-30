@@ -1,0 +1,71 @@
+/* ===== GENERAL ===== */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background-color: #fff3e0;
+  color: #333;
+}
+
+header {
+  background-color: #e64a19;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+nav {
+  background-color: #d84315;
+  text-align: center;
+  padding: 10px 0;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  max-width: 900px;
+  margin: 30px auto 80px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+h2 {
+  color: #bf360c;
+  margin-top: 20px;
+}
+
+p, ul {
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+strong {
+  color: #d84315;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: #e64a19;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 14px;
+}
