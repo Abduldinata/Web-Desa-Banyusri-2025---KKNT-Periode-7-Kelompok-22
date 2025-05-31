@@ -14,7 +14,7 @@
       <a href="dashboard-admin.html">Dashboard</a>
       <a href="pengumuman-admin.html">Kelola Pengumuman</a>
       <a href="warga-admin.html">Data Warga</a>
-      <a href="../login.html">Keluar</a>
+      <a href="login.html">Keluar</a>
     </nav>
   </header>
 
@@ -78,6 +78,28 @@
     }
 
     loadUsers();
+  </script>
+  
+  <!-- Tambahkan ini sebelum </body> -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script>
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          const data = doc.data();
+          if (!data || data.role !== "admin") {
+            alert("Akses ditolak. Anda bukan admin.");
+            window.location.href = "../login.html";
+          }
+        });
+      } else {
+        alert("Silakan login terlebih dahulu.");
+        window.location.href = "../login.html";
+      }
+    });
   </script>
 </body>
 </html>
