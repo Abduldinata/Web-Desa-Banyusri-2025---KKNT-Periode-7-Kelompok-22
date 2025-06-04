@@ -11,114 +11,343 @@
   <header>
     <h1>Profil Admin Desa Banyusri</h1>
     <nav>
-      <a href="dashboard-admin.html">Dashboard</a>
-      <a href="profil-admin.html">Profil Desa</a>
-      <a href="pengaduan-admin.html">Lihat Pengaduan</a>
-      <a href="layanan-admin.html">Kelola Layanan</a>
-      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
-      <a href="warga-admin.html">Data Warga</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard-admin.html">🏠 Dashboard</a>
+      <a href="profil-admin.html">📋 Profil Desa</a>
+      <a href="pengumuman-admin.html">📢 Pengumuman</a>
+      <a href="layanan-admin.html">🛠️ Layanan</a>
+      <a href="pengaduan-admin.html">📝 Pengaduan</a>
+      <a href="warga-admin.html">👥 Data Warga</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
   <main>
-    <h2>1. Data Umum Desa</h2>
-    <input type="text" id="nama-desa" />
-    <input type="text" id="kecamatan" />
-    <button onclick="updateProfil()">Simpan Perubahan</button>
+    <div id="message-container"></div>
+    
+    <div class="section">
+      <h2>1. Data Umum Desa</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nama-desa">Nama Desa:</label>
+          <input type="text" id="nama-desa" placeholder="Masukkan nama desa" />
+        </div>
+        <div class="form-group">
+          <label for="kecamatan">Kecamatan:</label>
+          <input type="text" id="kecamatan" placeholder="Masukkan nama kecamatan" />
+        </div>
+        <div class="form-group">
+          <label for="kabupaten">Kabupaten:</label>
+          <input type="text" id="kabupaten" placeholder="Masukkan nama kabupaten" />
+        </div>
+        <div class="form-group">
+          <label for="provinsi">Provinsi:</label>
+          <input type="text" id="provinsi" placeholder="Masukkan nama provinsi" />
+        </div>
+        <div class="form-group">
+          <label for="kode-pos">Kode Pos:</label>
+          <input type="text" id="kode-pos" placeholder="Masukkan kode pos" />
+        </div>
+      </div>
+    </div>
 
-    <p><strong>Kabupaten:</strong> Boyolali</p>
-    <p><strong>Provinsi:</strong> Jawa Tengah</p>
-    <p><strong>Kode Pos:</strong> 57382</p>
+    <div class="section">
+      <h2>2. Sejarah Singkat</h2>
+      <div class="form-group">
+        <label for="sejarah-singkat">Sejarah Desa:</label>
+        <textarea id="sejarah-singkat" placeholder="Masukkan sejarah singkat desa..."></textarea>
+      </div>
+    </div>
 
-    <h2>2. Sejarah Singkat</h2>
-    <p>
-      Desa Banyusri merupakan salah satu desa di Kecamatan Wonosegoro, Kabupaten Boyolali.
-      Nama "Banyusri" berasal dari kata "Banyu" (air) dan "Sri" (kemakmuran), mencerminkan
-      harapan masyarakat akan kesejahteraan dari kekayaan air yang melimpah.
-    </p>
+    <div class="section">
+      <h2>3. Visi dan Misi</h2>
+      <div class="form-group">
+        <label for="visi">Visi:</label>
+        <input type="text" id="visi" placeholder="Masukkan visi desa" />
+      </div>
+      <div class="form-group">
+        <label>Misi:</label>
+        <ul class="dynamic-list" id="misi-list"></ul>
+        <button type="button" class="add-btn" onclick="addMisiItem()">+ Tambah Misi</button>
+      </div>
+    </div>
 
-    <h2>3. Visi dan Misi</h2>
-    <p><strong>Visi:</strong> Mewujudkan Desa Banyusri yang mandiri, maju, dan sejahtera.</p>
-    <p><strong>Misi:</strong></p>
-    <ul>
-      <li>Memberikan pelayanan publik yang cepat dan transparan.</li>
-      <li>Mendorong partisipasi masyarakat dalam pembangunan.</li>
-      <li>Memanfaatkan potensi lokal untuk meningkatkan ekonomi desa.</li>
-      <li>Melestarikan lingkungan dan budaya lokal.</li>
-    </ul>
+    <div class="section">
+      <h2>4. Potensi Desa</h2>
+      <div class="form-group">
+        <label>Potensi Desa:</label>
+        <ul class="dynamic-list" id="potensi-list"></ul>
+        <button type="button" class="add-btn" onclick="addPotensiItem()">+ Tambah Potensi</button>
+      </div>
+    </div>
 
-    <h2>4. Struktur Pemerintahan Desa</h2>
-    <ul>
-      <li>Kepala Desa: Bpk. Sukardi</li>
-      <li>Sekretaris Desa</li>
-      <li>Kaur Pemerintahan</li>
-      <li>Kaur Keuangan</li>
-      <li>Kaur Umum</li>
-      <li>Kepala Dusun 1, 2, dan 3</li>
-    </ul>
+    <div class="section">
+      <h2>5. Struktur Pemerintahan Desa</h2>
+      <div class="form-group">
+        <label>Struktur Pemerintahan:</label>
+        <ul class="dynamic-list" id="struktur-list"></ul>
+        <button type="button" class="add-btn" onclick="addStrukturItem()">+ Tambah Struktur</button>
+      </div>
+    </div>
 
-    <h2>5. Kontak Admin</h2>
-    <p><strong>Alamat Kantor:</strong> Jl. Raya Banyusri No.1, Wonosegoro, Boyolali</p>
-    <p><strong>Email Admin:</strong> admin@banyusri.desa.id</p>
-    <p><strong>Telepon:</strong> (0276) 123456</p>
+    <div class="section">
+      <h2>6. Informasi Kontak</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="alamat">Alamat Kantor Desa:</label>
+          <input type="text" id="alamat" placeholder="Masukkan alamat lengkap" />
+        </div>
+        <div class="form-group">
+          <label for="telepon">Telepon:</label>
+          <input type="text" id="telepon" placeholder="Masukkan nomor telepon" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Masukkan alamat email" />
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="updateProfilDesa()">Simpan Perubahan</button>
   </main>
 
   <footer>
     &copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7
   </footer>
 
-  <!-- Tambahkan ini sebelum </body> -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
   <script>
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        db.collection("users").doc(user.uid).get().then(doc => {
-          const data = doc.data();
-          if (!data || data.role !== "admin") {
-            alert("Akses ditolak. Anda bukan admin.");
-            window.location.href = "../login.html";
+    // Mock Firebase for demonstration (replace with actual Firebase configuration)
+    const db = {
+      collection: function(name) {
+        return {
+          doc: function(id) {
+            return {
+              get: function() {
+                return Promise.resolve({
+                  exists: false,
+                  data: function() { return {}; }
+                });
+              },
+              set: function(data) {
+                console.log('Saving data:', data);
+                return Promise.resolve();
+              }
+            };
           }
-        });
-      } else {
-        alert("Silakan login terlebih dahulu.");
-        window.location.href = "../login.html";
+        };
       }
-    });
-  </script>
-  <script>
-  const db = firebase.firestore();
-
-  function loadProfil() {
-    db.collection("profil").doc("desaBanyusri").get()
-      .then(doc => {
-        if (doc.exists) {
-          const data = doc.data();
-          document.getElementById("nama-desa").value = data.namaDesa;
-          document.getElementById("kecamatan").value = data.kecamatan;
-          // lanjutkan sesuai lainnya
-        }
-      })
-      .catch(err => console.error("Gagal memuat profil: ", err));
-  }
-
-  function updateProfil() {
-    const updatedData = {
-      namaDesa: document.getElementById("nama-desa").value,
-      kecamatan: document.getElementById("kecamatan").value,
-      // lanjutkan sesuai lainnya
     };
 
-    db.collection("profil").doc("desaBanyusri").update(updatedData)
-      .then(() => alert("Profil berhasil diperbarui!"))
-      .catch(err => alert("Gagal update: " + err.message));
-  }
+    // Load existing data
+    function loadProfilData() {
+      db.collection("profil").doc("desaBanyusri").get()
+        .then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            
+            // Load basic info
+            document.getElementById("nama-desa").value = data.namaDesa || "";
+            document.getElementById("kecamatan").value = data.kecamatan || "";
+            document.getElementById("kabupaten").value = data.kabupaten || "";
+            document.getElementById("provinsi").value = data.provinsi || "";
+            document.getElementById("kode-pos").value = data.kodePos || "";
+            document.getElementById("sejarah-singkat").value = data.sejarah || "";
+            document.getElementById("visi").value = data.visi || "";
+            document.getElementById("alamat").value = data.alamat || "";
+            document.getElementById("telepon").value = data.telepon || "";
+            document.getElementById("email").value = data.email || "";
 
-  loadProfil();
-</script>
+            // Load misi
+            loadMisiList(data.misi || []);
+            
+            // Load potensi
+            loadPotensiList(data.potensi || []);
+            
+            // Load struktur
+            loadStrukturList(data.struktur || []);
+          } else {
+            // Initialize with empty lists
+            loadMisiList([]);
+            loadPotensiList([]);
+            loadStrukturList([]);
+          }
+        })
+        .catch(error => {
+          console.error("Error loading data:", error);
+          showMessage("Gagal memuat data profil", "error");
+        });
+    }
 
+    // Dynamic list functions for Misi
+    function loadMisiList(misiArray) {
+      const list = document.getElementById("misi-list");
+      list.innerHTML = "";
+      
+      if (misiArray.length === 0) {
+        addMisiItem();
+      } else {
+        misiArray.forEach(item => {
+          addMisiItem(item);
+        });
+      }
+    }
+
+    function addMisiItem(value = "") {
+      const list = document.getElementById("misi-list");
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <input type="text" placeholder="Masukkan misi desa" value="${value}" />
+        <button type="button" class="remove-btn" onclick="removeMisiItem(this)">Hapus</button>
+      `;
+      list.appendChild(li);
+    }
+
+    function removeMisiItem(button) {
+      const li = button.parentElement;
+      li.remove();
+    }
+
+    // Dynamic list functions for Potensi
+    function loadPotensiList(potensiArray) {
+      const list = document.getElementById("potensi-list");
+      list.innerHTML = "";
+      
+      if (potensiArray.length === 0) {
+        addPotensiItem();
+      } else {
+        potensiArray.forEach(item => {
+          addPotensiItem(item);
+        });
+      }
+    }
+
+    function addPotensiItem(value = "") {
+      const list = document.getElementById("potensi-list");
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <input type="text" placeholder="Masukkan potensi desa" value="${value}" />
+        <button type="button" class="remove-btn" onclick="removePotensiItem(this)">Hapus</button>
+      `;
+      list.appendChild(li);
+    }
+
+    function removePotensiItem(button) {
+      const li = button.parentElement;
+      li.remove();
+    }
+
+    // Dynamic list functions for Struktur
+    function loadStrukturList(strukturArray) {
+      const list = document.getElementById("struktur-list");
+      list.innerHTML = "";
+      
+      if (strukturArray.length === 0) {
+        addStrukturItem();
+      } else {
+        strukturArray.forEach(item => {
+          addStrukturItem(item);
+        });
+      }
+    }
+
+    function addStrukturItem(value = "") {
+      const list = document.getElementById("struktur-list");
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <input type="text" placeholder="Jabatan - Nama (misal: Kepala Desa - Budi Santoso)" value="${value}" />
+        <button type="button" class="remove-btn" onclick="removeStrukturItem(this)">Hapus</button>
+      `;
+      list.appendChild(li);
+    }
+
+    function removeStrukturItem(button) {
+      const li = button.parentElement;
+      li.remove();
+    }
+
+    // Collect data from dynamic lists
+    function collectMisiData() {
+      const inputs = document.querySelectorAll("#misi-list input");
+      return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+    }
+
+    function collectPotensiData() {
+      const inputs = document.querySelectorAll("#potensi-list input");
+      return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+    }
+
+    function collectStrukturData() {
+      const inputs = document.querySelectorAll("#struktur-list input");
+      return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+    }
+
+    // Update profile function
+    function updateProfilDesa() {
+      const saveBtn = document.querySelector(".save-btn");
+      saveBtn.classList.add("loading");
+      saveBtn.textContent = "Menyimpan...";
+
+      const profilData = {
+        namaDesa: document.getElementById("nama-desa").value.trim(),
+        kecamatan: document.getElementById("kecamatan").value.trim(),
+        kabupaten: document.getElementById("kabupaten").value.trim(),
+        provinsi: document.getElementById("provinsi").value.trim(),
+        kodePos: document.getElementById("kode-pos").value.trim(),
+        sejarah: document.getElementById("sejarah-singkat").value.trim(),
+        visi: document.getElementById("visi").value.trim(),
+        misi: collectMisiData(),
+        potensi: collectPotensiData(),
+        struktur: collectStrukturData(),
+        alamat: document.getElementById("alamat").value.trim(),
+        telepon: document.getElementById("telepon").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        lastUpdated: new Date().toISOString()
+      };
+
+      // Validate required fields
+      if (!profilData.namaDesa || !profilData.kecamatan || !profilData.kabupaten || !profilData.provinsi) {
+        showMessage("Mohon lengkapi data umum desa (Nama Desa, Kecamatan, Kabupaten, Provinsi)", "error");
+        saveBtn.classList.remove("loading");
+        saveBtn.textContent = "Simpan Perubahan";
+        return;
+      }
+
+      // Save to Firebase
+      db.collection("profil").doc("desaBanyusri").set(profilData)
+        .then(() => {
+          showMessage("Profil desa berhasil disimpan!", "success");
+          saveBtn.classList.remove("loading");
+          saveBtn.textContent = "Simpan Perubahan";
+        })
+        .catch(error => {
+          console.error("Error saving profile:", error);
+          showMessage("Gagal menyimpan profil desa. Silakan coba lagi.", "error");
+          saveBtn.classList.remove("loading");
+          saveBtn.textContent = "Simpan Perubahan";
+        });
+    }
+
+    // Show message function
+    function showMessage(message, type) {
+      const container = document.getElementById("message-container");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = type === "success" ? "success-message" : "error-message";
+      messageDiv.textContent = message;
+      
+      container.innerHTML = "";
+      container.appendChild(messageDiv);
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        if (container.contains(messageDiv)) {
+          container.removeChild(messageDiv);
+        }
+      }, 5000);
+    }
+
+    // Initialize page
+    document.addEventListener("DOMContentLoaded", function() {
+      loadProfilData();
+    });
+  </script>
 </body>
 </html>

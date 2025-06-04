@@ -10,20 +10,48 @@
   <header>
     <h1>Dashboard Warga Desa Banyusri</h1>
     <nav>
-      <a href="dashboard.html">Beranda</a>
-      <a href="profil.html">Profil Desa</a>
-      <a href="pengaduan.html">Pengaduan</a>
-      <a href="layanan.html">Layanan Desa</a>
-      <a href="pengumuman.html">Pengumuman</a>
-      <a href="register.html">Daftar</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard.html">🏠 Beranda</a>
+      <a href="profil.html">📋 Profil Desa</a>
+      <a href="pengaduan.html">📝 Pengaduan</a>
+      <a href="layanan.html">🛠️ Layanan Desa</a>
+      <a href="pengumuman.html">📢 Pengumuman</a>
+      <a href="register.html">👥 Daftar</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
   <main>
-    <h2>Halo, Warga!</h2>
+    <div class="welcome-card">
+      <h2>Selamat Datang, Warga!</h2>
+      <p>Sistem Informasi Digital Desa Banyusri</p>
+    </div>
+    
     <p>Gunakan layanan digital desa dengan mudah melalui menu di atas.</p>
+    
+    <div class="features">
+      <div class="feature-card">
+        <h3>📋 Profil Desa</h3>
+        <p>Lihat informasi lengkap tentang Desa Banyusri, visi misi, dan struktur organisasi.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📝 Pengaduan</h3>
+        <p>Sampaikan keluhan atau saran Anda untuk kemajuan desa.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🛠️ Layanan Desa</h3>
+        <p>Akses berbagai layanan administrasi dan pelayanan publik desa.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📢 Pengumuman</h3>
+        <p>Dapatkan info terbaru seputar kegiatan dan program desa.</p>
+      </div>
+    </div>
   </main>
+  
+  <footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>

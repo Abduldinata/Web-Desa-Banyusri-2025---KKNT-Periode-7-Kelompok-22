@@ -1,60 +1,179 @@
-      body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    background-color: #e3f2fd;
-    color: #333;
-  }
-
-  header {
-    background-color: #2e7d32;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-
-nav {
-  background-color: #388e3c;
-  text-align: center;
-  padding: 10px 0;
-}
-
-
-  nav a {
-    color: white;
-    margin: 0 15px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-
-  nav a:hover {
-    text-decoration: underline;
-  }
-
-  main {
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-      .layanan-box {
+/* Basic styling for better appearance */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    header h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+    
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: #667eea;
+      padding: 0.7rem 1.5rem;
+      border-radius: 25px;
       background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      font-weight: 500;
     }
+    
+    nav a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      background: #667eea;
+      color: white;
+    }
+    
+    #logout-btn {
+      background: #ff6b6b !important;
+      color: white !important;
+    }
+    
+    #logout-btn:hover {
+      background: #ee5a5a !important;
+    }
+    
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    main h2 {
+      color: #333;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      text-align: center;
+    }
+    
+    .layanan-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .layanan-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .layanan-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border-color: #667eea;
+    }
+    
     .layanan-box h3 {
-      margin-top: 0;
-      color: #2e7d32;
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      text-align: center;
     }
+    
+    .layanan-box p {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+    
     .layanan-box button {
-      background-color: #4caf50;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      padding: 8px 16px;
-      margin-top: 10px;
-      border-radius: 6px;
+      padding: 0.8rem 2rem;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      box-shadow: 0 3px 15px rgba(102, 126, 234, 0.3);
     }
+    
     .layanan-box button:hover {
-      background-color: #388e3c;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .layanan-box button:active {
+      transform: translateY(0);
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      nav a {
+        width: 200px;
+        text-align: center;
+      }
+      
+      main {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      
+      header h1 {
+        font-size: 1.4rem;
+      }
+      
+      .layanan-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .layanan-box {
+        padding: 1.5rem;
+      }
     }

@@ -4,33 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pengumuman Desa Banyusri</title>
-  <link rel="stylesheet" href="../style/style-pengumuman.css">
+  <link rel="stylesheet" href="../style/style-pengumuman.css" />
+  <link rel="icon" href="../assets/logo-desa.png" type="image/png" />
 </head>
 <body>
 
   <header>
     <h1>Pengumuman Desa Banyusri</h1>
     <nav>
-      <a href="dashboard.html">Beranda</a>
-      <a href="profil.html">Profil Desa</a>
-      <a href="pengaduan.html">Pengaduan</a>
-      <a href="layanan.html">Layanan Desa</a>
-      <a href="pengumuman.html">Pengumuman</a>
-      <a href="register.html">Daftar</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard.html">🏠 Beranda</a>
+      <a href="profil.html">📋 Profil Desa</a>
+      <a href="pengaduan.html">📝 Pengaduan</a>
+      <a href="layanan.html">🛠️ Layanan Desa</a>
+      <a href="pengumuman.html">📢 Pengumuman</a>
+      <a href="register.html">👥 Daftar</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
-  <main>
-    <section>
-      <h2>Judul Pengumuman</h2>
-      <p><em>Diposting: 23 Mei 2025 oleh Admin Desa</em></p>
-      <p>
-        Ini adalah contoh konten pengumuman yang bisa Anda ganti sesuai kebutuhan.
-        Misalnya: jadwal musyawarah desa, informasi bantuan, pengumuman penting terkait pelayanan, dll.
-      </p>
-    </section>
-  </main>
+<main>
+  <section id="daftar-pengumuman">
+    <h2>Daftar Pengumuman</h2>
+    <div id="list-pengumuman" class="loading">Memuat pengumuman...</div>
+  </section>
+</main>
 
   <footer>
     &copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7
@@ -41,5 +38,38 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
   <script src="../js/firebase-config.js"></script>
   <script src="../js/script.js"></script>
+  <script>
+  db.collection("pengumuman").orderBy("timestamp", "desc").get()
+    .then(snapshot => {
+      const list = document.getElementById("list-pengumuman");
+      list.classList.remove("loading");
+      
+      if (snapshot.empty) {
+        list.innerHTML = '<div class="no-data">Belum ada pengumuman tersedia.</div>';
+        return;
+      }
+      
+      list.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const waktu = data.timestamp.toDate().toLocaleString('id-ID');
+        const item = document.createElement("div");
+        item.classList.add("pengumuman-item");
+        item.innerHTML = `
+          <h3>${data.judul}</h3>
+          <p><em>Diposting: ${waktu} oleh Admin Desa</em></p>
+          <p>${data.isi}</p>
+        `;
+        list.appendChild(item);
+      });
+    })
+    .catch(err => {
+      console.error("Gagal memuat pengumuman:", err);
+      const list = document.getElementById("list-pengumuman");
+      list.classList.remove("loading");
+      list.innerHTML = '<div class="error-message">Gagal memuat pengumuman. Silakan refresh halaman atau coba lagi nanti.</div>';
+    });
+</script>
+
 </body>
 </html>

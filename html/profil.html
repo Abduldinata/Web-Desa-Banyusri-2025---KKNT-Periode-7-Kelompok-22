@@ -5,74 +5,203 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profil Desa Banyusri</title>
   <link rel="stylesheet" href="../style/style-profil.css" />
-
 </head>
 <body>
 
   <header>
     <h1>Profil Desa Banyusri</h1>
     <nav>
-      <a href="dashboard.html">Beranda</a>
-      <a href="profil.html">Profil Desa</a>
-      <a href="pengaduan.html">Pengaduan</a>
-      <a href="layanan.html">Layanan Desa</a>
-      <a href="pengumuman.html">Pengumuman</a>
-      <a href="register.html">Daftar</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard.html">🏠 Beranda</a>
+      <a href="profil.html">📋 Profil Desa</a>
+      <a href="pengaduan.html">📝 Pengaduan</a>
+      <a href="layanan.html">🛠️ Layanan Desa</a>
+      <a href="pengumuman.html">📢 Pengumuman</a>
+      <a href="register.html">👥 Daftar</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
   
-<main>
-  <h2>1. Data Umum Desa</h2>
-  <p><strong>Nama Desa:</strong> <span id="nama-desa"></span></p>
-  <p><strong>Kecamatan:</strong> <span id="kecamatan"></span></p>
-  <p><strong>Kabupaten:</strong> <span id="kabupaten"></span></p>
-  <p><strong>Provinsi:</strong> <span id="provinsi"></span></p>
-  <p><strong>Kode Pos:</strong> <span id="kode-pos"></span></p>
+  <main>
+    <div class="section">
+      <h2>1. Data Umum Desa</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Nama Desa:</strong>
+          <span id="nama-desa">-</span>
+        </div>
+        <div class="info-item">
+          <strong>Kecamatan:</strong>
+          <span id="kecamatan">-</span>
+        </div>
+        <div class="info-item">
+          <strong>Kabupaten:</strong>
+          <span id="kabupaten">-</span>
+        </div>
+        <div class="info-item">
+          <strong>Provinsi:</strong>
+          <span id="provinsi">-</span>
+        </div>
+        <div class="info-item">
+          <strong>Kode Pos:</strong>
+          <span id="kode-pos">-</span>
+        </div>
+      </div>
+    </div>
 
-  <h2>2. Sejarah Singkat</h2>
-  <p id="sejarah-singkat"></p>
+    <div class="section">
+      <h2>2. Sejarah Singkat</h2>
+      <div class="sejarah-content" id="sejarah-singkat">
+        Memuat sejarah desa...
+      </div>
+    </div>
 
-  <h2>3. Visi dan Misi Desa</h2>
-  <p><strong>Visi:</strong> <span id="visi"></span></p>
-  <p><strong>Misi:</strong></p>
-  <ul id="misi-list"></ul>
+    <div class="section">
+      <h2>3. Visi dan Misi Desa</h2>
+      <div class="visi-content">
+        <strong>Visi:</strong>
+        <div id="visi">Memuat visi desa...</div>
+      </div>
+      <div style="margin-top: 1rem;">
+        <strong style="color: #667eea; display: block; margin-bottom: 1rem;">Misi:</strong>
+        <ul class="misi-list" id="misi-list">
+          <li>Memuat misi desa...</li>
+        </ul>
+      </div>
+    </div>
 
-  <h2>4. Potensi Desa</h2>
-  <ul id="potensi-list"></ul>
+    <div class="section">
+      <h2>4. Potensi Desa</h2>
+      <ul class="potensi-list" id="potensi-list">
+        <li>Memuat potensi desa...</li>
+      </ul>
+    </div>
 
-  <h2>5. Struktur Pemerintahan Desa</h2>
-  <ul id="struktur-list"></ul>
+    <div class="section">
+      <h2>5. Struktur Pemerintahan Desa</h2>
+      <ul class="struktur-list" id="struktur-list">
+        <li>Memuat struktur pemerintahan...</li>
+      </ul>
+    </div>
 
-  <h2>6. Informasi Kontak</h2>
-  <p><strong>Alamat Kantor Desa:</strong> <span id="alamat"></span></p>
-  <p><strong>Telepon:</strong> <span id="telepon"></span></p>
-  <p><strong>Email:</strong> <span id="email"></span></p>
-</main>
-
+    <div class="section">
+      <h2>6. Informasi Kontak</h2>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <strong>Alamat Kantor Desa</strong>
+          <span id="alamat">-</span>
+        </div>
+        <div class="contact-item">
+          <strong>Telepon</strong>
+          <span id="telepon">-</span>
+        </div>
+        <div class="contact-item">
+          <strong>Email</strong>
+          <span id="email">-</span>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <footer>
     &copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7
   </footer>
-<script>
-  const db = firebase.firestore();
 
-  db.collection("profil").doc("desaBanyusri").get()
-    .then(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        document.getElementById("nama-desa").textContent = data.namaDesa;
-        document.getElementById("kecamatan").textContent = data.kecamatan;
-        document.getElementById("kabupaten").textContent = data.kabupaten;
-        document.getElementById("provinsi").textContent = data.provinsi;
-        document.getElementById("kodepos").textContent = data.kodePos;
-        document.getElementById("sejarah").textContent = data.sejarah;
-        document.getElementById("visi").textContent = data.visi;
-        // Bisa lanjutkan untuk misi, potensi, dll.
-      }
-    })
-    .catch(err => console.error("Gagal memuat profil: ", err));
-</script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+
+  <script>
+    // Load profil data from Firestore
+    const db = firebase.firestore();
+
+    db.collection("profil").doc("desaBanyusri").get()
+      .then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          
+          // Update basic info
+          document.getElementById("nama-desa").textContent = data.namaDesa || "Belum diisi";
+          document.getElementById("kecamatan").textContent = data.kecamatan || "Belum diisi";
+          document.getElementById("kabupaten").textContent = data.kabupaten || "Belum diisi";
+          document.getElementById("provinsi").textContent = data.provinsi || "Belum diisi";
+          document.getElementById("kode-pos").textContent = data.kodePos || "Belum diisi";
+          
+          // Update sejarah
+          document.getElementById("sejarah-singkat").textContent = data.sejarah || "Sejarah desa belum diisi.";
+          
+          // Update visi
+          document.getElementById("visi").textContent = data.visi || "Visi desa belum diisi.";
+
+          // Update misi
+          const misiList = document.getElementById("misi-list");
+          misiList.innerHTML = "";
+          if (data.misi && data.misi.length > 0) {
+            data.misi.forEach(misi => {
+              if (misi.trim()) {
+                const li = document.createElement("li");
+                li.textContent = misi;
+                misiList.appendChild(li);
+              }
+            });
+          } else {
+            const li = document.createElement("li");
+            li.textContent = "Misi desa belum diisi.";
+            misiList.appendChild(li);
+          }
+
+          // Update potensi
+          const potensiList = document.getElementById("potensi-list");
+          potensiList.innerHTML = "";
+          if (data.potensi && data.potensi.length > 0) {
+            data.potensi.forEach(potensi => {
+              if (potensi.trim()) {
+                const li = document.createElement("li");
+                li.textContent = potensi;
+                potensiList.appendChild(li);
+              }
+            });
+          } else {
+            const li = document.createElement("li");
+            li.textContent = "Potensi desa belum diisi.";
+            potensiList.appendChild(li);
+          }
+
+          // Update struktur
+          const strukturList = document.getElementById("struktur-list");
+          strukturList.innerHTML = "";
+          if (data.struktur && data.struktur.length > 0) {
+            data.struktur.forEach(struktur => {
+              if (struktur.trim()) {
+                const li = document.createElement("li");
+                li.textContent = struktur;
+                strukturList.appendChild(li);
+              }
+            });
+          } else {
+            const li = document.createElement("li");
+            li.textContent = "Struktur pemerintahan belum diisi.";
+            strukturList.appendChild(li);
+          }
+
+          // Update kontak
+          document.getElementById("alamat").textContent = data.alamat || "Belum diisi";
+          document.getElementById("telepon").textContent = data.telepon || "Belum diisi";
+          document.getElementById("email").textContent = data.email || "Belum diisi";
+        } else {
+          console.log("No such document!");
+          // Show default message when no data
+          document.getElementById("sejarah-singkat").textContent = "Data profil desa belum tersedia.";
+          document.getElementById("visi").textContent = "Data profil desa belum tersedia.";
+        }
+      })
+      .catch(error => {
+        console.error("Error getting document:", error);
+        document.getElementById("sejarah-singkat").textContent = "Gagal memuat data profil desa.";
+        document.getElementById("visi").textContent = "Gagal memuat data profil desa.";
+      });
+  </script>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>

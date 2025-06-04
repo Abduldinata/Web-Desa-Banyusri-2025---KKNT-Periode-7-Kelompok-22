@@ -2,82 +2,157 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kelola Pengumuman - Admin Desa Banyusri</title>
   <link rel="stylesheet" href="../style/style-pengumuman-admin.css">
+  <link rel="icon" href="../assets/logo-desa.png" type="image/png">
 </head>
 <body>
   <header>
     <h1>Kelola Pengumuman</h1>
     <nav>
-      <a href="dashboard-admin.html">Dashboard</a>
-      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
-      <a href="layanan-admin.html">Layanan Desa</a>
-      <a href="pengaduan-admin.html">Lihat Pengaduan</a>
-      <a href="warga-admin.html">Data Warga</a>
-      <a href="../login.html">Keluar</a>
+      <a href="dashboard-admin.html">🏠 Dashboard</a>
+      <a href="profil-admin.html">📋 Profil Desa</a>
+      <a href="pengumuman-admin.html">📢 Pengumuman</a>
+      <a href="layanan-admin.html">🛠️ Layanan</a>
+      <a href="pengaduan-admin.html">📝 Pengaduan</a>
+      <a href="warga-admin.html">👥 Data Warga</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
   <main>
     <h2>Form Tambah Pengumuman</h2>
-    <form id="form-pengumuman">
-      <label for="judul">Judul:</label><br>
-      <input type="text" id="judul" required><br><br>
+    
+    <div class="form-container">
+      <form id="form-pengumuman">
+        <div>
+          <label for="judul">Judul Pengumuman</label>
+          <input type="text" id="judul" placeholder="Masukkan judul pengumuman..." required>
+        </div>
 
-      <label for="isi">Isi Pengumuman:</label><br>
-      <textarea id="isi" rows="6" required></textarea><br><br>
+        <div>
+          <label for="isi">Isi Pengumuman</label>
+          <textarea id="isi" placeholder="Tulis isi pengumuman di sini..." required></textarea>
+        </div>
 
-      <button type="submit">Posting Pengumuman</button>
-    </form>
-    <p id="status"></p>
+        <button type="submit">Posting Pengumuman</button>
+      </form>
+      
+      <div id="status"></div>
+    </div>
+
+    <div class="recent-announcements">
+      <h3>Pengumuman Terbaru</h3>
+      <div id="recent-list">
+        <div style="text-align: center; color: #999; padding: 1rem;">
+          Memuat pengumuman terbaru...
+        </div>
+      </div>
+    </div>
   </main>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
-  <script>
-    const db = firebase.firestore();
-    const form = document.getElementById("form-pengumuman");
-    const status = document.getElementById("status");
-
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const judul = document.getElementById("judul").value;
-      const isi = document.getElementById("isi").value;
-
-      db.collection("pengumuman").add({
-        judul: judul,
-        isi: isi,
-        timestamp: new Date()
-      }).then(() => {
-        status.textContent = "Pengumuman berhasil diposting.";
-        form.reset();
-      }).catch(err => {
-        status.textContent = "Gagal: " + err.message;
-      });
-    });
-  </script>
+  <footer>
+    &copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7
+  </footer>
   
-  <!-- Tambahkan ini sebelum </body> -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/script.js"></script>
+  
   <script>
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        db.collection("users").doc(user.uid).get().then(doc => {
-          const data = doc.data();
-          if (!data || data.role !== "admin") {
-            alert("Akses ditolak. Anda bukan admin.");
-            window.location.href = "../login.html";
+    // Function to load recent announcements
+    function loadRecentAnnouncements() {
+      db.collection("pengumuman")
+        .orderBy("timestamp", "desc")
+        .limit(5)
+        .get()
+        .then(snapshot => {
+          const recentList = document.getElementById("recent-list");
+          
+          if (snapshot.empty) {
+            recentList.innerHTML = '<div style="text-align: center; color: #999; padding: 1rem;">Belum ada pengumuman.</div>';
+            return;
           }
+          
+          recentList.innerHTML = "";
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const waktu = data.timestamp.toDate().toLocaleString('id-ID');
+            const item = document.createElement("div");
+            item.classList.add("announcement-item");
+            item.innerHTML = `
+              <h4>${data.judul}</h4>
+              <div class="timestamp">Diposting: ${waktu}</div>
+              <div class="content">${data.isi.length > 100 ? data.isi.substring(0, 100) + '...' : data.isi}</div>
+            `;
+            recentList.appendChild(item);
+          });
+        })
+        .catch(err => {
+          console.error("Gagal memuat pengumuman terbaru:", err);
+          document.getElementById("recent-list").innerHTML = 
+            '<div style="text-align: center; color: #d63031; padding: 1rem;">Gagal memuat pengumuman terbaru.</div>';
         });
-      } else {
-        alert("Silakan login terlebih dahulu.");
-        window.location.href = "../login.html";
+    }
+
+    // Form submission handler
+    document.getElementById("form-pengumuman").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const judul = document.getElementById("judul").value.trim();
+      const isi = document.getElementById("isi").value.trim();
+      const status = document.getElementById("status");
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      
+      if (!judul || !isi) {
+        status.className = "error";
+        status.textContent = "Harap isi semua field yang diperlukan.";
+        return;
       }
+      
+      // Show loading state
+      status.className = "loading";
+      status.textContent = "Memposting pengumuman...";
+      submitBtn.disabled = true;
+      
+      // Add to Firestore
+      db.collection("pengumuman").add({
+        judul: judul,
+        isi: isi,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        status.className = "success";
+        status.textContent = "Pengumuman berhasil diposting!";
+        
+        // Reset form
+        document.getElementById("judul").value = "";
+        document.getElementById("isi").value = "";
+        
+        // Reload recent announcements
+        loadRecentAnnouncements();
+        
+        // Clear status after 3 seconds
+        setTimeout(() => {
+          status.textContent = "";
+          status.className = "";
+        }, 3000);
+      })
+      .catch(err => {
+        console.error("Error posting announcement:", err);
+        status.className = "error";
+        status.textContent = "Gagal memposting pengumuman. Silakan coba lagi.";
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+      });
     });
+
+    // Load recent announcements on page load
+    document.addEventListener("DOMContentLoaded", loadRecentAnnouncements);
   </script>
 </body>
 </html>

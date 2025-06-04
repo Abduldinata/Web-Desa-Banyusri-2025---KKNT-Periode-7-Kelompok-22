@@ -3,111 +3,351 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Layanan Desa</title>
-  <link rel="stylesheet" href="../style/style-layanan-admin.css" />
+  <title>Admin - Pengaduan Masyarakat</title>
+  <link rel="stylesheet" href="../style/style-pengaduan-admin.css" />
 </head>
 <body>
   <header>
-    <h1>Kelola Layanan Desa</h1>
+    <h1>Kelola Pengaduan Masyarakat</h1>
     <nav>
-      <a href="dashboard-admin.html">Dashboard</a>
-      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
-      <a href="layanan-admin.html">Layanan Desa</a>
-      <a href="pengaduan-admin.html">Lihat Pengaduan</a>
-      <a href="warga-admin.html">Data Warga</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard-admin.html">🏠 Dashboard</a>
+      <a href="profil-admin.html">📋 Profil Desa</a>
+      <a href="pengumuman-admin.html">📢 Pengumuman</a>
+      <a href="layanan-admin.html">🛠️ Layanan</a>
+      <a href="pengaduan-admin.html">📝 Pengaduan</a>
+      <a href="warga-admin.html">👥 Data Warga</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
   <main>
-    <h2>Daftar Layanan Publik</h2>
-    <button onclick="tambahLayanan()">Tambah Layanan Baru</button>
+    <h2>Daftar Pengaduan Masyarakat</h2>
+    
+    <!-- Statistics Cards -->
+    <div class="stats-container">
+      <div class="stat-card stat-total">
+        <h3 id="total-pengaduan">0</h3>
+        <p>Total Pengaduan</p>
+      </div>
+      <div class="stat-card stat-pending">
+        <h3 id="pending-count">0</h3>
+        <p>Menunggu</p>
+      </div>
+      <div class="stat-card stat-proses">
+        <h3 id="proses-count">0</h3>
+        <p>Diproses</p>
+      </div>
+      <div class="stat-card stat-selesai">
+        <h3 id="selesai-count">0</h3>
+        <p>Selesai</p>
+      </div>
+    </div>
+    
+    <!-- Filter -->
+    <div class="filter-container">
+      <label for="filter-status">Filter Status:</label>
+      <select id="filter-status" class="filter-select">
+        <option value="semua">Semua Status</option>
+        <option value="pending">Menunggu</option>
+        <option value="proses">Diproses</option>
+        <option value="selesai">Selesai</option>
+      </select>
+    </div>
+    
+    <!-- Table -->
     <table>
       <thead>
         <tr>
-          <th>Nama Layanan</th>
-          <th>Deskripsi</th>
+          <th>Tanggal</th>
+          <th>Nama</th>
+          <th>Isi Pengaduan</th>
+          <th>Status</th>
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="layanan-table-body">
-        <tr><td colspan="3">Memuat data...</td></tr>
+      <tbody id="pengaduan-table-body">
+        <tr><td colspan="5" class="loading">Memuat data pengaduan...</td></tr>
       </tbody>
     </table>
     <p id="status"></p>
   </main>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
-  <script>
-    const db = firebase.firestore();
-    const tableBody = document.getElementById("layanan-table-body");
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3 id="modal-title">Konfirmasi Aksi</h3>
+      <p id="modal-message">Apakah Anda yakin ingin melakukan aksi ini?</p>
+      <div class="modal-buttons">
+        <button class="modal-btn btn-cancel" id="btn-cancel">Batal</button>
+        <button class="modal-btn btn-confirm" id="btn-confirm">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
 
-    function loadLayanan() {
-      db.collection("layanan").get().then(snapshot => {
-        tableBody.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${data.nama}</td>
-            <td>${data.deskripsi}</td>
-            <td>
-              <button onclick="hapusLayanan('${doc.id}')">Hapus</button>
-            </td>`;
-          tableBody.appendChild(row);
-        });
-      }).catch(err => {
-        tableBody.innerHTML = `<tr><td colspan="3">Gagal memuat data: ${err.message}</td></tr>`;
-      });
-    }
+  <footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>
 
-    function tambahLayanan() {
-      const nama = prompt("Nama layanan baru:");
-      const deskripsi = prompt("Deskripsi layanan:");
-      if (nama && deskripsi) {
-        db.collection("layanan").add({ nama, deskripsi })
-          .then(() => loadLayanan())
-          .catch(err => alert("Gagal tambah: " + err.message));
-      }
-    }
-
-    function hapusLayanan(id) {
-      if (confirm("Yakin ingin menghapus layanan ini?")) {
-        db.collection("layanan").doc(id).delete()
-          .then(() => loadLayanan())
-          .catch(err => alert("Gagal hapus: " + err.message));
-      }
-    }
-
-    loadLayanan();
-  </script>
-  
-  <!-- Tambahkan ini sebelum </body> -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/script.js"></script>
+
   <script>
-    auth.onAuthStateChanged((user) => {
+    // Firebase configuration
+    const db = firebase.firestore();
+    let currentAction = null;
+    let currentId = null;
+    let currentUser = null;
+
+    // DOM Elements
+    const tableBody = document.getElementById('pengaduan-table-body');
+    const filterStatus = document.getElementById('filter-status');
+    const statusEl = document.getElementById('status');
+    const modal = document.getElementById('confirmModal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const btnCancel = document.getElementById('btn-cancel');
+    const btnConfirm = document.getElementById('btn-confirm');
+    const closeModal = document.querySelector('.close');
+
+    // Data variables
+    let pengaduanData = [];
+    let filteredData = [];
+
+    // Check authentication and initialize
+    firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        db.collection("users").doc(user.uid).get().then(doc => {
-          const data = doc.data();
-          if (!data || data.role !== "admin") {
-            alert("Akses ditolak. Anda bukan admin.");
-            window.location.href = "../login.html";
-          }
+        currentUser = user;
+        console.log("User logged in:", user.email);
+        loadPengaduanData();
+      } else {
+        console.log("No user logged in, redirecting...");
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Event listeners
+      filterStatus.addEventListener('change', filterPengaduan);
+      
+      // Modal event listeners
+      closeModal.addEventListener('click', hideModal);
+      btnCancel.addEventListener('click', hideModal);
+      btnConfirm.addEventListener('click', confirmAction);
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          hideModal();
+        }
+      });
+    });
+
+    function loadPengaduanData() {
+      if (!currentUser) {
+        console.log("No current user found");
+        return;
+      }
+
+      // Show loading state
+      tableBody.innerHTML = '<tr><td colspan="5" class="loading">Memuat data pengaduan...</td></tr>';
+
+      // Load pengaduan data from Firestore
+      db.collection("pengaduan")
+        .orderBy("timestamp", "desc")
+        .onSnapshot(snapshot => {
+          pengaduanData = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            pengaduanData.push({
+              id: doc.id,
+              nama: data.nama || '-',
+              email: data.email || '-',
+              isi: data.isi || '-',
+              status: data.status || 'pending',
+              timestamp: data.timestamp,
+              tanggal: data.tanggal || (data.timestamp ? data.timestamp.toDate().toISOString().split('T')[0] : new Date().toISOString().split('T')[0])
+            });
+          });
+          
+          filteredData = [...pengaduanData];
+          updateStats();
+          renderTable();
+        }, err => {
+          console.error("Error loading pengaduan:", err);
+          tableBody.innerHTML = '<tr><td colspan="5" class="loading">Gagal memuat data pengaduan</td></tr>';
+          showStatus("Gagal memuat data pengaduan: " + err.message, 'error');
+        });
+    }
+
+    function updateStats() {
+      const total = pengaduanData.length;
+      const pending = pengaduanData.filter(p => p.status === 'pending').length;
+      const proses = pengaduanData.filter(p => p.status === 'proses').length;
+      const selesai = pengaduanData.filter(p => p.status === 'selesai').length;
+
+      document.getElementById('total-pengaduan').textContent = total;
+      document.getElementById('pending-count').textContent = pending;
+      document.getElementById('proses-count').textContent = proses;
+      document.getElementById('selesai-count').textContent = selesai;
+    }
+
+    function formatTanggal(tanggal) {
+      if (!tanggal) return '-';
+      const date = new Date(tanggal);
+      return date.toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+
+    function getStatusBadge(status) {
+      const badges = {
+        'pending': '<span class="status-badge status-pending">Menunggu</span>',
+        'proses': '<span class="status-badge status-proses">Diproses</span>',
+        'selesai': '<span class="status-badge status-selesai">Selesai</span>'
+      };
+      return badges[status] || badges['pending'];
+    }
+
+    function getActionButtons(pengaduan) {
+      let buttons = '';
+      
+      if (pengaduan.status === 'pending') {
+        buttons += `<button class="action-btn btn-proses" onclick="showConfirm('proses', '${pengaduan.id}', '${pengaduan.nama}')">Proses</button>`;
+        buttons += `<button class="action-btn btn-selesai" onclick="showConfirm('selesai', '${pengaduan.id}', '${pengaduan.nama}')">Selesai</button>`;
+      } else if (pengaduan.status === 'proses') {
+        buttons += `<button class="action-btn btn-selesai" onclick="showConfirm('selesai', '${pengaduan.id}', '${pengaduan.nama}')">Selesai</button>`;
+      }
+      
+      buttons += `<button class="action-btn btn-hapus" onclick="showConfirm('hapus', '${pengaduan.id}', '${pengaduan.nama}')">Hapus</button>`;
+      
+      return buttons;
+    }
+
+    function renderTable() {
+      if (filteredData.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="loading">Tidak ada pengaduan yang sesuai dengan filter.</td></tr>';
+        return;
+      }
+
+      const rows = filteredData.map(pengaduan => `
+        <tr>
+          <td>${formatTanggal(pengaduan.tanggal)}</td>
+          <td>${pengaduan.nama || '-'}</td>
+          <td class="pengaduan-content" title="${pengaduan.isi || '-'}">${pengaduan.isi || '-'}</td>
+          <td>${getStatusBadge(pengaduan.status)}</td>
+          <td>${getActionButtons(pengaduan)}</td>
+        </tr>
+      `).join('');
+
+      tableBody.innerHTML = rows;
+    }
+
+    function filterPengaduan() {
+      const selectedStatus = filterStatus.value;
+      
+      if (selectedStatus === 'semua') {
+        filteredData = [...pengaduanData];
+      } else {
+        filteredData = pengaduanData.filter(p => p.status === selectedStatus);
+      }
+      
+      renderTable();
+    }
+
+    function showConfirm(action, id, nama) {
+      currentAction = action;
+      currentId = id;
+      
+      const messages = {
+        'proses': `Ubah status pengaduan dari ${nama} menjadi "Diproses"?`,
+        'selesai': `Ubah status pengaduan dari ${nama} menjadi "Selesai"?`,
+        'hapus': `Hapus pengaduan dari ${nama}? Aksi ini tidak dapat dibatalkan.`
+      };
+      
+      const titles = {
+        'proses': 'Proses Pengaduan',
+        'selesai': 'Selesaikan Pengaduan',
+        'hapus': 'Hapus Pengaduan'
+      };
+      
+      modalTitle.textContent = titles[action];
+      modalMessage.textContent = messages[action];
+      modal.style.display = 'block';
+    }
+
+    function hideModal() {
+      modal.style.display = 'none';
+      currentAction = null;
+      currentId = null;
+    }
+
+    function confirmAction() {
+      if (!currentAction || !currentId) return;
+
+      const pengaduanIndex = pengaduanData.findIndex(p => p.id === currentId);
+
+      if (pengaduanIndex === -1) {
+        showStatus('Pengaduan tidak ditemukan!', 'error');
+        hideModal();
+        return;
+      }
+
+      const pengaduanRef = db.collection("pengaduan").doc(currentId);
+
+      if (currentAction === 'hapus') {
+        pengaduanRef.delete().then(() => {
+          showStatus('Pengaduan berhasil dihapus!', 'success');
+          hideModal();
+        }).catch(err => {
+          console.error("Error deleting pengaduan:", err);
+          showStatus('Gagal menghapus: ' + err.message, 'error');
+          hideModal();
         });
       } else {
-        alert("Silakan login terlebih dahulu.");
-        window.location.href = "../login.html";
+        pengaduanRef.update({ 
+          status: currentAction,
+          updatedAt: new Date(),
+          updatedBy: currentUser.email
+        }).then(() => {
+          const statusText = currentAction === 'proses' ? 'diproses' : 'diselesaikan';
+          showStatus(`Pengaduan berhasil ${statusText}!`, 'success');
+          hideModal();
+        }).catch(err => {
+          console.error("Error updating pengaduan:", err);
+          showStatus('Gagal update status: ' + err.message, 'error');
+          hideModal();
+        });
+      }
+    }
+
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = type === 'success' ? 'status-success' : 'status-error';
+      
+      setTimeout(() => {
+        statusEl.textContent = '';
+        statusEl.className = '';
+      }, 3000);
+    }
+
+    // Logout confirmation
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Apakah Anda yakin ingin keluar?')) {
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('Error signing out:', error);
+        });
       }
     });
   </script>
 </body>
 </html>
-<!-- 
- --><!--   <footer>
-    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
-  </footer>

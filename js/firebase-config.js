@@ -1,3 +1,6 @@
+// firebase-config.js
+
+// Pakai CDN compat version
 const firebaseConfig = {
   apiKey: "AIzaSyAhHgvDoV_iN5BJE1n3Eiglz371aG8hWV8",
   authDomain: "web-desa-banyusri.firebaseapp.com",
@@ -7,7 +10,7 @@ const firebaseConfig = {
   appId: "1:39340456745:web:b549c4122a82b8a78fd538"
 };
 
+// Inisialisasi Firebase compat
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.firestore();

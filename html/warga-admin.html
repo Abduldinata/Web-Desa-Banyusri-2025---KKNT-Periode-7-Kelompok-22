@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Data Warga - Admin Desa Banyusri</title>
   <link rel="stylesheet" href="../style/style-warga-admin.css" />
-  
+  <link rel="icon" href="../assets/logo-desa.png" type="image/png">
 </head>
 <body>
   <header>
     <h1>Data Pengguna (Warga dan Admin)</h1>
     <nav>
-      <a href="dashboard-admin.html">Dashboard</a>
-      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
-      <a href="warga-admin.html">Data Warga</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard-admin.html">🏠 Dashboard</a>
+      <a href="profil-admin.html">📋 Profil Desa</a>
+      <a href="pengumuman-admin.html">📢 Pengumuman</a>
+      <a href="layanan-admin.html">🛠️ Layanan</a>
+      <a href="pengaduan-admin.html">📝 Pengaduan</a>
+      <a href="warga-admin.html">👥 Data Warga</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
@@ -30,70 +33,93 @@
         </tr>
       </thead>
       <tbody id="user-table-body">
-        <tr><td colspan="4">Memuat data...</td></tr>
+        <tr><td colspan="4" class="loading">Memuat data...</td></tr>
       </tbody>
     </table>
-    <p id="status"></p>
+    <div id="status"></div>
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
+  <script src="../js/firebase-config.js"></script>
   <script>
     const db = firebase.firestore();
+    const auth = firebase.auth();
     const tableBody = document.getElementById("user-table-body");
     const status = document.getElementById("status");
 
+    function showStatus(message, isError = false) {
+      status.textContent = message;
+      status.className = isError ? 'show error' : 'show';
+      setTimeout(() => {
+        status.classList.remove('show');
+      }, 3000);
+    }
+
     function loadUsers() {
+      tableBody.innerHTML = '<tr><td colspan="4" class="loading">Memuat data...</td></tr>';
+      
       db.collection("users").get().then(snapshot => {
         tableBody.innerHTML = "";
+        
+        if (snapshot.empty) {
+          tableBody.innerHTML = '<tr><td colspan="4" class="loading">Belum ada data pengguna.</td></tr>';
+          return;
+        }
+        
         snapshot.forEach(doc => {
           const data = doc.data();
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${data.nama}</td>
-            <td>${data.email}</td>
-            <td>${data.role}</td>
+            <td>${data.nama || 'Tidak ada nama'}</td>
+            <td>${data.email || 'Tidak ada email'}</td>
+            <td><span class="role-badge ${data.role}">${data.role || 'Tidak ada role'}</span></td>
             <td>
-              <button class="btn-hapus" onclick="hapusUser('${doc.id}', '${data.nama}')">Hapus</button>
+              <button class="btn-hapus" onclick="hapusUser('${doc.id}', '${data.nama || 'Pengguna'}')">Hapus</button>
             </td>`;
           tableBody.appendChild(row);
         });
       }).catch(err => {
-        tableBody.innerHTML = `<tr><td colspan="4">Gagal memuat data: ${err.message}</td></tr>`;
+        console.error("Error loading users:", err);
+        tableBody.innerHTML = `<tr><td colspan="4" class="loading error">Gagal memuat data: ${err.message}</td></tr>`;
       });
     }
 
     function hapusUser(uid, nama) {
-      if (confirm(`Yakin ingin menghapus akun ${nama}?`)) {
+      if (confirm(`Yakin ingin menghapus akun "${nama}"?\nTindakan ini tidak dapat dibatalkan.`)) {
         db.collection("users").doc(uid).delete()
           .then(() => {
-            status.textContent = `Akun ${nama} berhasil dihapus dari database.`;
+            showStatus(`Akun "${nama}" berhasil dihapus dari database.`);
             loadUsers();
           })
           .catch(err => {
-            status.textContent = "Gagal menghapus: " + err.message;
+            console.error("Error deleting user:", err);
+            showStatus("Gagal menghapus: " + err.message, true);
           });
       }
     }
 
-    loadUsers();
-  </script>
-  
-  <!-- Tambahkan ini sebelum </body> -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
-  <script>
+    // Authentication check
     auth.onAuthStateChanged((user) => {
       if (user) {
         db.collection("users").doc(user.uid).get().then(doc => {
-          const data = doc.data();
-          if (!data || data.role !== "admin") {
-            alert("Akses ditolak. Anda bukan admin.");
+          if (doc.exists) {
+            const data = doc.data();
+            if (data && data.role === "admin") {
+              loadUsers();
+            } else {
+              alert("Akses ditolak. Anda bukan admin.");
+              window.location.href = "../login.html";
+            }
+          } else {
+            alert("Data pengguna tidak ditemukan.");
             window.location.href = "../login.html";
           }
+        }).catch(err => {
+          console.error("Error checking user role:", err);
+          alert("Terjadi kesalahan saat memverifikasi akses.");
+          window.location.href = "../login.html";
         });
       } else {
         alert("Silakan login terlebih dahulu.");

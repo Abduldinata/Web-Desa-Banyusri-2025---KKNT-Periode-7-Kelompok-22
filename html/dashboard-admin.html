@@ -3,47 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Desa Banyusri</title>
+  <title>Admin Dashboard - Desa Banyusri</title>
   <link rel="stylesheet" href="../style/style-dashboard-admin.css" />
 </head>
 <body>
   <header>
     <h1>Panel Admin Desa Banyusri</h1>
     <nav>
-      <a href="dashboard-admin.html">Dashboard</a>
-      <a href="pengumuman-admin.html">Kelola Pengumuman</a>
-      <a href="layanan-admin.html">Layanan Desa</a>
-      <a href="pengaduan-admin.html">Lihat Pengaduan</a>
-      <a href="warga-admin.html">Data Warga</a>
-      <a href="login.html">Keluar</a>
+      <a href="dashboard-admin.html">🏠 Dashboard</a>
+      <a href="profil-admin.html">📋 Profil Desa</a>
+      <a href="pengumuman-admin.html">📢 Pengumuman</a>
+      <a href="layanan-admin.html">🛠️ Layanan</a>
+      <a href="pengaduan-admin.html">📝 Pengaduan</a>
+      <a href="warga-admin.html">👥 Data Warga</a>
+      <a href="#" id="logout-btn">🚪 Keluar</a>
     </nav>
   </header>
 
   <main>
-    <h2>Selamat Datang, Admin!</h2>
-    <p>Silakan kelola data desa melalui panel ini.</p>
+    <div class="admin-welcome">
+      <h2>Selamat Datang, Admin!</h2>
+      <p>Dashboard Pengelolaan Sistem Informasi Desa Banyusri</p>
+    </div>
+    
+    <div class="admin-stats">
+      <div class="stat-card">
+        <h3>📝 Total Pengaduan</h3>
+        <div class="stat-number" id="total-pengaduan">-</div>
+        <div class="stat-desc">Pengaduan warga</div>
+      </div>
+      <div class="stat-card">
+        <h3>🛠️ Layanan Aktif</h3>
+        <div class="stat-number" id="total-layanan">-</div>
+        <div class="stat-desc">Layanan tersedia</div>
+      </div>
+      <div class="stat-card">
+        <h3>👥 Pengguna Terdaftar</h3>
+        <div class="stat-number" id="total-users">-</div>
+        <div class="stat-desc">Akun warga</div>
+      </div>
+      <div class="stat-card">
+        <h3>📢 Pengumuman</h3>
+        <div class="stat-number" id="total-pengumuman">-</div>
+        <div class="stat-desc">Pengumuman aktif</div>
+      </div>
+    </div>
+    
+    <div class="admin-menu">
+      <div class="menu-card">
+        <div class="menu-icon">📋</div>
+        <h3>Kelola Profil Desa</h3>
+        <p>Edit informasi, visi misi, dan data umum desa</p>
+        <a href="profil-admin.html" class="menu-btn">Kelola</a>
+      </div>
+      
+      <div class="menu-card">
+        <div class="menu-icon">📢</div>
+        <h3>Kelola Pengumuman</h3>
+        <p>Tambah, edit, dan hapus pengumuman untuk warga</p>
+        <a href="pengumuman-admin.html" class="menu-btn">Kelola</a>
+      </div>
+      
+      <div class="menu-card">
+        <div class="menu-icon">🛠️</div>
+        <h3>Kelola Layanan</h3>
+        <p>Tambah dan kelola layanan yang tersedia</p>
+        <a href="layanan-admin.html" class="menu-btn">Kelola</a>
+      </div>
+      
+      <div class="menu-card">
+        <div class="menu-icon">📝</div>
+        <h3>Lihat Pengaduan</h3>
+        <p>Pantau dan tanggapi pengaduan dari warga</p>
+        <a href="pengaduan-admin.html" class="menu-btn">Lihat</a>
+      </div>
+      
+      <div class="menu-card">
+        <div class="menu-icon">👥</div>
+        <h3>Data Warga</h3>
+        <p>Kelola data pengguna dan hak akses</p>
+        <a href="warga-admin.html" class="menu-btn">Kelola</a>
+      </div>
+    </div>
   </main>
   
-  <!-- Tambahkan ini sebelum </body> -->
+  <footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/script.js"></script>
+  
   <script>
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        db.collection("users").doc(user.uid).get().then(doc => {
-          const data = doc.data();
-          if (!data || data.role !== "admin") {
-            alert("Akses ditolak. Anda bukan admin.");
-            window.location.href = "../login.html";
-          }
-        });
-      } else {
-        alert("Silakan login terlebih dahulu.");
-        window.location.href = "../login.html";
-      }
+    // Load dashboard statistics
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDashboardStats();
     });
+    
+    function loadDashboardStats() {
+      // Load pengaduan count
+      db.collection("pengaduan").get().then(snapshot => {
+        document.getElementById("total-pengaduan").textContent = snapshot.size;
+      }).catch(err => {
+        document.getElementById("total-pengaduan").textContent = "Error";
+      });
+      
+      // Load layanan count
+      db.collection("layanan").get().then(snapshot => {
+        document.getElementById("total-layanan").textContent = snapshot.size;
+      }).catch(err => {
+        document.getElementById("total-layanan").textContent = "Error";
+      });
+      
+      // Load users count
+      db.collection("users").get().then(snapshot => {
+        document.getElementById("total-users").textContent = snapshot.size;
+      }).catch(err => {
+        document.getElementById("total-users").textContent = "Error";
+      });
+      
+      // Load pengumuman count
+      db.collection("pengumuman").get().then(snapshot => {
+        document.getElementById("total-pengumuman").textContent = snapshot.size;
+      }).catch(err => {
+        document.getElementById("total-pengumuman").textContent = "Error";
+      });
+    }
   </script>
 </body>
 </html>
