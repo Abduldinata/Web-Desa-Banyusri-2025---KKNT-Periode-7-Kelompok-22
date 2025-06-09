@@ -54,125 +54,321 @@
   <script src="../js/script.js"></script>
 
   <script>
-  const db = firebase.firestore();
-  let currentUser = null;
+    let currentUser = null;
 
-  // Check authentication
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      currentUser = user;
-      console.log("User logged in:", user.email);
-      // Auto-fill nama field if user has displayName
-      if (user.displayName) {
-        document.getElementById('nama').value = user.displayName;
-      }
-      loadRiwayatPengaduan();
-    } else {
-      console.log("No user logged in, redirecting...");
-      window.location.href = 'login.html';
-    }
-  });
-
-  // Fungsi untuk menampilkan riwayat pengaduan dari Firestore berdasarkan user login
-  function loadRiwayatPengaduan() {
-    const riwayatList = document.getElementById('riwayat-list');
-    riwayatList.innerHTML = '<div class="loading">Memuat riwayat pengaduan...</div>';
-
-    if (!currentUser) {
-      riwayatList.innerHTML = '<div class="info">Silakan login terlebih dahulu.</div>';
-      return;
-    }
-
-    // Query berdasarkan email user yang login
-    db.collection("pengaduan")
-      .where("email", "==", currentUser.email)
-      .orderBy("timestamp", "desc")
-      .get()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          riwayatList.innerHTML = '<div class="info">Belum ada pengaduan.</div>';
-          return;
+    // Check authentication
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        currentUser = user;
+        console.log("User logged in:", user.email);
+        
+        // PERBAIKAN: Auto-fill nama field dengan lebih aman
+        const namaField = document.getElementById('nama');
+        if (namaField && user.displayName) {
+          namaField.value = user.displayName;
         }
-        let html = '<ul class="riwayat-ul">';
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const tanggal = data.tanggal || (data.timestamp && data.timestamp.toDate().toLocaleDateString()) || '-';
-          html += `<li>
-            <strong>${tanggal}</strong><br>
-            <span>${data.isi}</span><br>
-            <em>Status: ${data.status || 'pending'}</em>
-          </li>`;
+        
+        // PERBAIKAN: Load riwayat setelah user terverifikasi
+        loadRiwayatPengaduan();
+      } else {
+        console.log("No user logged in, redirecting...");
+        window.location.href = 'login.html';
+      }
+    });
+
+    // PERBAIKAN: Fungsi loadRiwayatPengaduan yang lebih robust
+    function loadRiwayatPengaduan() {
+      const riwayatList = document.getElementById('riwayat-list');
+      
+      if (!riwayatList) {
+        console.error("Element riwayat-list tidak ditemukan");
+        return;
+      }
+
+      riwayatList.innerHTML = '<div class="loading">Memuat riwayat pengaduan...</div>';
+
+      if (!currentUser || !currentUser.email) {
+        riwayatList.innerHTML = '<div class="info">Silakan login terlebih dahulu.</div>';
+        return;
+      }
+
+      console.log("Loading riwayat for user:", currentUser.email);
+
+      // PERBAIKAN: Gunakan realtime listener dengan error handling yang lebih baik
+      db.collection("pengaduan")
+        .where("email", "==", currentUser.email)
+        .orderBy("timestamp", "desc")
+        .onSnapshot(snapshot => {
+          console.log("Snapshot received, size:", snapshot.size);
+          
+          if (snapshot.empty) {
+            riwayatList.innerHTML = '<div class="info">Belum ada pengaduan.</div>';
+            return;
+          }
+
+          let html = '<ul class="riwayat-ul">';
+          
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            console.log("Document data:", data);
+            
+            // PERBAIKAN: Handle timestamp dengan lebih aman
+            let tanggal = '-';
+            if (data.timestamp) {
+              try {
+                tanggal = data.timestamp.toDate().toLocaleDateString('id-ID', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric'
+                });
+              } catch (error) {
+                console.error("Error formatting timestamp:", error);
+                tanggal = data.tanggal || '-';
+              }
+            } else if (data.tanggal) {
+              tanggal = data.tanggal;
+            }
+
+            // PERBAIKAN: Tambahkan status badge
+            const statusText = getStatusText(data.status || 'pending');
+            const statusClass = getStatusClass(data.status || 'pending');
+
+            html += `
+              <li class="pengaduan-item">
+                <div class="pengaduan-header">
+                  <strong>Tanggal:</strong> ${tanggal}
+                  <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+                <div class="pengaduan-content">
+                  <strong>Isi Pengaduan:</strong><br>
+                  <span class="pengaduan-text">${data.isi || 'Tidak ada isi'}</span>
+                </div>
+              </li>
+            `;
+          });
+          
+          html += '</ul>';
+          riwayatList.innerHTML = html;
+        }, error => {
+          console.error("Error loading riwayat:", error);
+          riwayatList.innerHTML = `<div class="status-error">Gagal memuat riwayat: ${error.message}</div>`;
         });
-        html += '</ul>';
-        riwayatList.innerHTML = html;
-      })
-      .catch(err => {
-        console.error("Error loading riwayat:", err);
-        riwayatList.innerHTML = '<div class="status-error">Gagal memuat riwayat: ' + err.message + '</div>';
-      });
-  }
-
-  // Fungsi untuk menangani submit form
-  document.getElementById('form-pengaduan').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    if (!currentUser) {
-      alert('Silakan login terlebih dahulu!');
-      return;
     }
 
-    const nama = document.getElementById('nama').value;
-    const isi = document.getElementById('isi').value;
-    const statusElement = document.getElementById('status');
+    // PERBAIKAN: Fungsi helper untuk status
+function getStatusText(status) {
+  const statusMap = {
+    'pending': 'Menunggu',
+    'belum dibaca': 'Menunggu',
+    'proses': 'Diproses',
+    'diproses': 'Diproses',
+    'selesai': 'Selesai'
+  };
+  return statusMap[status] || 'Menunggu';
+}
 
-    if (nama && isi) {
-      // Simpan dengan email user yang login
-      db.collection("pengaduan").add({
+function getStatusClass(status) {
+  const classMap = {
+    'pending': 'status-pending',
+    'belum dibaca': 'status-pending',
+    'proses': 'status-proses',
+    'diproses': 'status-proses',
+    'selesai': 'status-selesai'
+  };
+  return classMap[status] || 'status-pending';
+}function getStatusText(status) {
+  const statusMap = {
+    'pending': 'Menunggu',
+    'belum dibaca': 'Menunggu',
+    'proses': 'Diproses',
+    'diproses': 'Diproses',
+    'selesai': 'Selesai'
+  };
+  return statusMap[status] || 'Menunggu';
+}
+
+function getStatusClass(status) {
+  const classMap = {
+    'pending': 'status-pending',
+    'belum dibaca': 'status-pending',
+    'proses': 'status-proses',
+    'diproses': 'status-proses',
+    'selesai': 'status-selesai'
+  };
+  return classMap[status] || 'status-pending';
+}function getStatusText(status) {
+  const statusMap = {
+    'pending': 'Menunggu',
+    'belum dibaca': 'Menunggu',
+    'proses': 'Diproses',
+    'diproses': 'Diproses',
+    'selesai': 'Selesai'
+  };
+  return statusMap[status] || 'Menunggu';
+}
+
+function getStatusClass(status) {
+  const classMap = {
+    'pending': 'status-pending',
+    'belum dibaca': 'status-pending',
+    'proses': 'status-proses',
+    'diproses': 'status-proses',
+    'selesai': 'status-selesai'
+  };
+  return classMap[status] || 'status-pending';
+}function getStatusText(status) {
+  const statusMap = {
+    'pending': 'Menunggu',
+    'belum dibaca': 'Menunggu',
+    'proses': 'Diproses',
+    'diproses': 'Diproses',
+    'selesai': 'Selesai'
+  };
+  return statusMap[status] || 'Menunggu';
+}
+
+function getStatusClass(status) {
+  const classMap = {
+    'pending': 'status-pending',
+    'belum dibaca': 'status-pending',
+    'proses': 'status-proses',
+    'diproses': 'status-proses',
+    'selesai': 'status-selesai'
+  };
+  return classMap[status] || 'status-pending';
+}
+
+    // PERBAIKAN: Form submit dengan error handling yang lebih baik
+    document.getElementById('form-pengaduan').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      if (!currentUser || !currentUser.email) {
+        alert('Silakan login terlebih dahulu!');
+        return;
+      }
+
+      const nama = document.getElementById('nama').value.trim();
+      const isi = document.getElementById('isi').value.trim();
+      const statusElement = document.getElementById('status');
+
+      // PERBAIKAN: Validasi input
+      if (!nama) {
+        showStatus('Nama harus diisi!', 'error');
+        return;
+      }
+
+      if (!isi) {
+        showStatus('Isi pengaduan harus diisi!', 'error');
+        return;
+      }
+
+      if (nama.length < 2 || nama.length > 50) {
+        showStatus('Nama harus antara 2-50 karakter!', 'error');
+        return;
+      }
+
+      if (isi.length < 10) {
+        showStatus('Isi pengaduan minimal 10 karakter!', 'error');
+        return;
+      }
+
+      // Show loading state
+      showStatus('Mengirim pengaduan...', 'loading');
+      const submitBtn = document.querySelector('#form-pengaduan button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Mengirim...';
+
+      // PERBAIKAN: Simpan dengan data yang lebih lengkap
+      const pengaduanData = {
         nama: nama,
-        email: currentUser.email,
+        email: currentUser.email, // WAJIB untuk query
         isi: isi,
         status: "pending",
         timestamp: new Date(),
-        tanggal: new Date().toISOString().split('T')[0]
-      })
-      .then(() => {
-        statusElement.textContent = 'Pengaduan berhasil dikirim!';
-        statusElement.className = 'status-success';
-        document.getElementById('isi').value = '';
-        loadRiwayatPengaduan();
+        tanggal: new Date().toISOString().split('T')[0],
+        userId: currentUser.uid // Tambahan untuk referensi
+      };
+
+      console.log("Saving pengaduan data:", pengaduanData);
+
+      db.collection("pengaduan").add(pengaduanData)
+        .then((docRef) => {
+          console.log("Pengaduan saved with ID:", docRef.id);
+          showStatus('Pengaduan berhasil dikirim!', 'success');
+          
+          // Reset form
+          document.getElementById('isi').value = '';
+          
+          // Re-enable button
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Kirim Pengaduan';
+          
+          // Riwayat akan auto-update karena menggunakan realtime listener
+        })
+        .catch(err => {
+          console.error("Error submitting pengaduan:", err);
+          showStatus('Gagal mengirim pengaduan: ' + err.message, 'error');
+          
+          // Re-enable button
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Kirim Pengaduan';
+        });
+    });
+
+    // PERBAIKAN: Fungsi showStatus yang lebih baik
+    function showStatus(message, type) {
+      const statusElement = document.getElementById('status');
+      if (!statusElement) return;
+
+      statusElement.textContent = message;
+      statusElement.className = `status-${type}`;
+      
+      // Auto-hide status after 5 seconds (except for loading)
+      if (type !== 'loading') {
         setTimeout(() => {
           statusElement.textContent = '';
           statusElement.className = '';
-        }, 3000);
-      })
-      .catch(err => {
-        console.error("Error submitting pengaduan:", err);
-        statusElement.textContent = 'Gagal mengirim pengaduan: ' + err.message;
-        statusElement.className = 'status-error';
-      });
-    } else {
-      statusElement.textContent = 'Mohon lengkapi semua field!';
-      statusElement.className = 'status-error';
+        }, 5000);
+      }
     }
-  });
 
-  // Load riwayat saat halaman dimuat
-  document.addEventListener('DOMContentLoaded', function() {
-    // Remove the input event listener for nama field since we're now using email-based queries
-    // loadRiwayatPengaduan(); // This will be called by onAuthStateChanged
-  });
+    // PERBAIKAN: Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Apakah Anda yakin ingin keluar?')) {
+        firebase.auth().signOut().then(() => {
+          console.log("User logged out successfully");
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('Error signing out:', error);
+          alert('Gagal logout: ' + error.message);
+        });
+      }
+    });
 
-  // Logout functionality
-  document.getElementById('logout-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    if (confirm('Apakah Anda yakin ingin keluar?')) {
-      firebase.auth().signOut().then(() => {
-        window.location.href = 'login.html';
-      }).catch((error) => {
-        console.error('Error signing out:', error);
-      });
-    }
-  });
+    // PERBAIKAN: Error handling global
+    window.addEventListener('unhandledrejection', function(event) {
+      console.error('Unhandled promise rejection:', event.reason);
+      if (event.reason && event.reason.code) {
+        // Firebase error
+        if (event.reason.code === 'failed-precondition') {
+          console.error('Firestore index missing. Check console for index creation link.');
+        }
+      }
+    });
+
+    // PERBAIKAN: Connection check saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+      // Test Firestore connection
+      db.collection("pengaduan").limit(1).get()
+        .then(() => {
+          console.log("Firestore connection successful");
+        })
+        .catch(error => {
+          console.error("Firestore connection failed:", error);
+          showStatus('Koneksi database bermasalah. Silakan refresh halaman.', 'error');
+        });
+    });
   </script>
 </body>
 </html>

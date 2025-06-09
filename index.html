@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desa Banyusri - Sistem Informasi Digital</title>
+    <link rel="stylesheet" href="../style/style-index.css">
+</head>
+<body>
+    <header>
+        <h1>🏘️ Selamat Datang di Desa Banyusri</h1>
+        <nav>
+            <a href="html/login.html">🔐 Masukan akun</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h2>Sistem Informasi Digital Desa Banyusri</h2>
+            <p>Mewujudkan pelayanan publik yang modern, transparan, dan efisien untuk kemajuan masyarakat desa. Mari bersama membangun desa digital yang lebih baik.</p>
+            <div class="cta-buttons">
+                <a href="html/register.html" class="cta-button">📝 Daftar Sekarang</a>
+                <a href="#features" class="cta-button secondary">📖 Pelajari Lebih Lanjut</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="feature-card">
+                <span class="feature-icon">📋</span>
+                <h3>Administrasi Online</h3>
+                <p>Layanan pembuatan surat-surat kependudukan, surat keterangan, dan dokumen administrasi lainnya secara online tanpa perlu datang ke kantor desa.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">💰</span>
+                <h3>Informasi Keuangan</h3>
+                <p>Transparansi pengelolaan dana desa, laporan keuangan, dan program pembangunan yang dapat diakses oleh seluruh warga desa.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <h3>Data Kependudukan</h3>
+                <p>Sistem informasi data penduduk yang terintegrasi untuk memudahkan pelayanan dan perencanaan pembangunan desa.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🏗️</span>
+                <h3>Program Pembangunan</h3>
+                <p>Informasi terkini tentang program pembangunan desa, proyek infrastruktur, dan rencana pengembangan wilayah.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📢</span>
+                <h3>Pengumuman Desa</h3>
+                <p>Portal informasi dan pengumuman resmi dari pemerintah desa untuk masyarakat secara real-time.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🤝</span>
+                <h3>Layanan Masyarakat</h3>
+                <p>Platform pengaduan, saran, dan aspirasi masyarakat untuk meningkatkan kualitas pelayanan publik.</p>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <h2 style="text-align: center; color: #333; margin-bottom: 2rem;">Statistik Desa Banyusri</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>2,456</h3>
+                    <p>Total Penduduk</p>
+                </div>
+                <div class="stat-item">
+                    <h3>647</h3>
+                    <p>Kepala Keluarga</p>
+                </div>
+                <div class="stat-item">
+                    <h3>12.5</h3>
+                    <p>Luas Wilayah (km²)</p>
+                </div>
+                <div class="stat-item">
+                    <h3>85%</h3>
+                    <p>Tingkat Literasi Digital</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Section -->
+        <section class="info-section">
+            <h2 style="text-align: center; color: #333; margin-bottom: 2rem;">Informasi Penting</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>🕐 Jam Pelayanan</h4>
+                    <p>Senin - Jumat: 08.00 - 16.00 WIB<br>
+                    Sabtu: 08.00 - 12.00 WIB<br>
+                    Minggu: Tutup</p>
+                </div>
+                <div class="info-card">
+                    <h4>📍 Alamat Kantor Desa</h4>
+                    <p>Jl. Raya Desa Banyusri No. 123<br>
+                    Kecamatan Boyolali Utara<br>
+                    Kabupaten Boyolali, Jawa Tengah</p>
+                </div>
+                <div class="info-card">
+                    <h4>📞 Kontak</h4>
+                    <p>Telepon: (0276) 123-4567<br>
+                    Email: info@banyusri.desa.id<br>
+                    WhatsApp: +62 812-3456-7890</p>
+                </div>
+                <div class="info-card">
+                    <h4>🏛️ Kepala Desa</h4>
+                    <p>Bapak Suwanto, S.Sos<br>
+                    Periode: 2019 - 2025<br>
+                    "Melayani dengan Hati untuk Kemajuan Desa"</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#tentang">Tentang Kami</a>
+                <a href="#layanan">Layanan</a>
+                <a href="#kontak">Kontak</a>
+                <a href="#bantuan">Bantuan</a>
+                <a href="#privacy">Kebijakan Privasi</a>
+            </div>
+        <footer>
+            <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+        </footer>
+    </footer>
+
+    <script>
+        // Smooth scrolling untuk anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Simple animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card, .info-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Counter animation for stats
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-item h3');
+            counters.forEach(counter => {
+                const target = parseFloat(counter.textContent.replace(/[^\d.]/g, ''));
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = counter.textContent.replace(/[\d.]+/, target);
+                        clearInterval(timer);
+                    } else {
+                        const value = Math.floor(current);
+                        counter.textContent = counter.textContent.replace(/[\d.]+/, value);
+                    }
+                }, 20);
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const statsSection = document.querySelector('.stats-section');
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statsObserver.observe(statsSection);
+    </script>
+</body>
+</html>

@@ -411,9 +411,16 @@ if (pengaduanForm) {
     }
 
     const statusElement = document.getElementById("status");
-    
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+      alert("Anda harus login untuk mengirim pengaduan.");
+      return;
+    }
+
     db.collection("pengaduan").add({
       nama: nama.trim(),
+      email: user.email, // <-- TAMBAHKAN INI!
       isi: isi.trim(),
       timestamp: new Date(),
       status: "belum dibaca"
