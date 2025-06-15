@@ -6,7 +6,7 @@
     }
     
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI';
       line-height: 1.6;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
@@ -109,20 +109,33 @@
     
     input[type="text"],
     input[type="email"],
-    textarea {
+    input[type="tel"],
+    input[type="number"],
+    input[type="password"],
+    textarea,
+    .dynamic-list input {
       width: 100%;
       padding: 0.8rem;
       border: 2px solid #e1e5e9;
       border-radius: 10px;
       font-size: 1rem;
-      transition: border-color 0.3s ease;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #222;
+      background: #f4f7fa;
+      transition: border-color 0.3s, background 0.3s;
+      box-sizing: border-box;
     }
     
     input[type="text"]:focus,
     input[type="email"]:focus,
-    textarea:focus {
+    input[type="tel"]:focus,
+    input[type="number"]:focus,
+    input[type="password"]:focus,
+    textarea:focus,
+    .dynamic-list input:focus {
       outline: none;
       border-color: #667eea;
+      background: #fff;
     }
     
     textarea {

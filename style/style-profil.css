@@ -122,17 +122,25 @@
       line-height: 1.8;
     }
     
-    .visi-content {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 10px;
-      text-align: center;
-      font-style: italic;
-      font-size: 1.1rem;
+    .visi-list, .potensi-list, .struktur-list {
+      list-style: none;
+      padding: 0;
     }
     
-    .misi-list, .potensi-list, .struktur-list {
+    .visi-list li, .potensi-list li, .struktur-list li {
+      background: #f8f9ff;
+      margin: 0.5rem 0;
+      padding: 1rem;
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+      transition: transform 0.3s ease;
+    }
+    
+    .visi-list li:hover, .potensi-list li:hover, .struktur-list li:hover {
+      transform: translateX(10px);
+    }
+    
+    .visi-list, .potensi-list, .struktur-list {
       list-style: none;
       padding: 0;
     }

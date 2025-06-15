@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kelola Pengumuman - Admin Desa Banyusri</title>
+  <title>Kelola Pengumuman Admin - Desa Banyusri</title>
   <link rel="stylesheet" href="../style/style-pengumuman-admin.css">
-  <link rel="icon" href="../assets/logo-desa.png" type="image/png">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../js/firebase-config.js"></script>
-  <script src="../js/script.js"></script>
+  <link rel="stylesheet" href="../style/style-logo-desa.css" />
 </head>
 <body>
+  
   <header>
-    <h1>Kelola Pengumuman</h1>
+    <div class="header-logo-title">
+    <img src="../assets/logo-desa.png" alt="Logo Desa Banyusri" class="logo-desa" style="height:60px;vertical-align:middle;margin-right:16px;">
+    <h1 style="display:inline-block;vertical-align:middle;">Kelola Pengumuman Admin Desa Banyusri</h1>
+    </div>
     <nav>
       <a href="dashboard-admin.html">🏠 Dashboard</a>
       <a href="profil-admin.html">📋 Profil Desa</a>
@@ -60,6 +59,13 @@
   <footer>
     &copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7
   </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>    
+  
+
   <script>
     // Function to load recent announcements
     function loadRecentAnnouncements() {

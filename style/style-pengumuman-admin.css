@@ -240,6 +240,25 @@
       color: #666;
     }
     
+    .remove-btn {
+  background: #fff;
+  color: #e53935;
+  border: 1.5px solid #e53935;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.remove-btn:hover {
+  background: #e53935;
+  color: #fff;
+  border-color: #b71c1c;
+}
+
     footer {
       text-align: center;
       padding: 2rem;

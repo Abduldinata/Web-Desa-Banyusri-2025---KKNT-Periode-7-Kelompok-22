@@ -19,45 +19,6 @@ function validatePassword(password) {
     return false;
   }
   
-  // Opsional: tambahkan validasi lain
-  // - Minimal 1 huruf besar
-  // - Minimal 1 angka
-  // - Minimal 1 karakter khusus
-  
-  return true;
-}
-
-// Validasi Password yang lebih ketat (opsional)
-function validateStrongPassword(password) {
-  if (!password || typeof password !== 'string') {
-    return false;
-  }
-  
-  // Minimal 8 karakter
-  if (password.length < 8) {
-    return false;
-  }
-  
-  // Harus ada huruf kecil
-  if (!/[a-z]/.test(password)) {
-    return false;
-  }
-  
-  // Harus ada huruf besar
-  if (!/[A-Z]/.test(password)) {
-    return false;
-  }
-  
-  // Harus ada angka
-  if (!/\d/.test(password)) {
-    return false;
-  }
-  
-  // Harus ada karakter khusus
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    return false;
-  }
-  
   return true;
 }
 
@@ -78,6 +39,7 @@ function validateName(name) {
   const nameRegex = /^[a-zA-Z\s]+$/;
   return nameRegex.test(trimmedName);
 }
+
 // === Global Variables ===
 let logoutTimer;
 
@@ -139,40 +101,40 @@ if (loginForm) {
     }
 
     // Lanjut ke proses authentication Firebase
-auth.signInWithEmailAndPassword(email, password)
-  .then((cred) => {
-    // Ambil data user dari Firestore
-    db.collection("users").doc(cred.user.uid).get().then(doc => {
-      if (doc.exists) {
-        const role = doc.data().role;
-        if (role === "admin") {
-          window.location.href = "dashboard-admin.html";
-        } else if (role === "user") {
-          window.location.href = "dashboard.html";
-        } else {
-          alert("Role tidak dikenali.");
-        }
-      } else {
-        alert("Data user tidak ditemukan.");
-      }
-    }).catch(err => {
-      alert("Gagal mengambil data user: " + err.message);
-    });
-  })
-  .catch((err) => {
-    alert("Login gagal: " + err.message);
+    auth.signInWithEmailAndPassword(email, password)
+      .then((cred) => {
+        // Ambil data user dari Firestore
+        db.collection("users").doc(cred.user.uid).get().then(doc => {
+          if (doc.exists) {
+            const role = doc.data().role;
+            if (role === "admin") {
+              window.location.href = "dashboard-admin.html";
+            } else if (role === "user") {
+              window.location.href = "dashboard.html";
+            } else {
+              alert("Role tidak dikenali.");
+            }
+          } else {
+            alert("Data user tidak ditemukan.");
+          }
+        }).catch(err => {
+          alert("Gagal mengambil data user: " + err.message);
+        });
+      })
+      .catch((err) => {
+        alert("Login gagal: " + err.message);
+      });
   });
-}); // <--- Tambahkan ini untuk menutup event listener
-}   
+}
 
-// === Load Profil Desa ===
+// === Load Profil Desa (untuk halaman publik) ===
 function loadProfilDesa() {
   db.collection("profil").doc("desaBanyusri").get()
     .then(doc => {
       if (doc.exists) {
         const data = doc.data();
         
-        // Safe element updates
+        // Safe element updates dengan mapping yang benar
         const elements = {
           "nama-desa": data.namaDesa || "",
           "kecamatan": data.kecamatan || "",
@@ -192,6 +154,19 @@ function loadProfilDesa() {
             element.textContent = elements[id];
           }
         });
+
+        // Visi
+        const visiList = document.getElementById("visi-list");
+        if (visiList) {
+          visiList.innerHTML = "";
+          if (data.visi && Array.isArray(data.visi)) {
+            data.visi.forEach(item => {
+              const li = document.createElement("li");
+              li.textContent = item;
+              visiList.appendChild(li);
+            });
+          }
+        }
 
         // Misi
         const misiList = document.getElementById("misi-list");
@@ -238,27 +213,321 @@ function loadProfilDesa() {
     .catch(err => console.error("Gagal memuat data profil: ", err));
 }
 
+// === Load Profil untuk Admin Edit (yang diperbaiki) ===
+function loadProfilData() {
+  if (!db) {
+    console.error('Firestore not initialized');
+    return;
+  }
+
+  db.collection("profil").doc("desaBanyusri").get()
+    .then(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        console.log('Loading profile data:', data);
+        
+        // Load basic info dengan mapping yang benar sesuai HTML
+        setInputValue("nama-desa", data.namaDesa);
+        setInputValue("kecamatan", data.kecamatan);
+        setInputValue("kabupaten", data.kabupaten);
+        setInputValue("provinsi", data.provinsi);
+        setInputValue("kode-pos", data.kodePos);
+        setInputValue("sejarah-singkat", data.sejarah);
+        setInputValue("Visi", data.visi); // Sesuai dengan ID di HTML
+        setInputValue("alamat", data.alamat);
+        setInputValue("telepon", data.telepon);
+        setInputValue("email", data.email);
+
+        // Load dynamic lists
+        loadVisiList(data.visi || []);
+        loadMisiList(data.misi || []);
+        loadPotensiList(data.potensi || []);
+        loadStrukturList(data.struktur || []);
+        
+        showMessage("Data profil berhasil dimuat", "success");
+      } else {
+        console.log("No profile document found, initializing empty form");
+        // Initialize with empty lists
+        loadVisiList([]);
+        loadMisiList([]);
+        loadPotensiList([]);
+        loadStrukturList([]);
+        showMessage("Tidak ada data profil, silakan isi form", "info");
+      }
+    })
+    .catch(error => {
+      console.error("Error loading profile data:", error);
+      showMessage("Gagal memuat data profil: " + error.message, "error");
+      
+      // Initialize empty lists on error
+      loadVisiList([]);
+      loadMisiList([]);
+      loadPotensiList([]);
+      loadStrukturList([]);
+    });
+}
+
+function setInputValue(id, value) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.value = value || "";
+  }
+}
+
+// Dynamic list functions for Visi
+function loadVisiList(visiArray) {
+  const list = document.getElementById("visi-list");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (!Array.isArray(visiArray) || visiArray.length === 0) {
+    addVisiItem();
+  } else {
+    visiArray.forEach(item => {
+      addVisiItem(item);
+    });
+  }
+}
+
+function addVisiItem(value = "") {
+  const list = document.getElementById("visi-list");
+  if (!list) return;
+  
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <input type="text" placeholder="Masukkan visi desa" value="${value}" />
+    <button type="button" class="remove-btn" onclick="removeVisiItem(this)">Hapus</button>
+  `;
+  list.appendChild(li);
+}
+
+function removeMisiItem(button) {
+  const li = button.parentElement;
+  li.remove();
+}
+
+
+// Dynamic list functions for Misi
+function loadMisiList(misiArray) {
+  const list = document.getElementById("misi-list");
+  if (!list) return;
+  
+  list.innerHTML = "";
+  
+  if (misiArray.length === 0) {
+    addMisiItem();
+  } else {
+    misiArray.forEach(item => {
+      addMisiItem(item);
+    });
+  }
+}
+
+function addMisiItem(value = "") {
+  const list = document.getElementById("misi-list");
+  if (!list) return;
+  
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <input type="text" placeholder="Masukkan misi desa" value="${value}" />
+    <button type="button" class="remove-btn" onclick="removeMisiItem(this)">Hapus</button>
+  `;
+  list.appendChild(li);
+}
+
+function removeMisiItem(button) {
+  const li = button.parentElement;
+  li.remove();
+}
+
+// Dynamic list functions for Potensi
+function loadPotensiList(potensiArray) {
+  const list = document.getElementById("potensi-list");
+  if (!list) return;
+  
+  list.innerHTML = "";
+  
+  if (potensiArray.length === 0) {
+    addPotensiItem();
+  } else {
+    potensiArray.forEach(item => {
+      addPotensiItem(item);
+    });
+  }
+}
+
+function addPotensiItem(value = "") {
+  const list = document.getElementById("potensi-list");
+  if (!list) return;
+  
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <input type="text" placeholder="Masukkan potensi desa" value="${value}" />
+    <button type="button" class="remove-btn" onclick="removePotensiItem(this)">Hapus</button>
+  `;
+  list.appendChild(li);
+}
+
+function removePotensiItem(button) {
+  const li = button.parentElement;
+  li.remove();
+}
+
+// Dynamic list functions for Struktur
+function loadStrukturList(strukturArray) {
+  const list = document.getElementById("struktur-list");
+  if (!list) return;
+  
+  list.innerHTML = "";
+  
+  if (strukturArray.length === 0) {
+    addStrukturItem();
+  } else {
+    strukturArray.forEach(item => {
+      addStrukturItem(item);
+    });
+  }
+}
+
+function addStrukturItem(value = "") {
+  const list = document.getElementById("struktur-list");
+  if (!list) return;
+  
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <input type="text" placeholder="Jabatan - Nama (misal: Kepala Desa - Budi Santoso)" value="${value}" />
+    <button type="button" class="remove-btn" onclick="removeStrukturItem(this)">Hapus</button>
+  `;
+  list.appendChild(li);
+}
+
+function removeStrukturItem(button) {
+  const li = button.parentElement;
+  li.remove();
+}
+
+// Untuk mengumpulkan data visi sebelum simpan:
+function collectVisiData() {
+  const inputs = document.querySelectorAll("#visi-list input");
+  return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+}
+
+// Collect data from dynamic lists
+function collectMisiData() {
+  const inputs = document.querySelectorAll("#misi-list input");
+  return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+}
+
+function collectPotensiData() {
+  const inputs = document.querySelectorAll("#potensi-list input");
+  return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+}
+
+function collectStrukturData() {
+  const inputs = document.querySelectorAll("#struktur-list input");
+  return Array.from(inputs).map(input => input.value.trim()).filter(value => value !== "");
+}
+
 // === Update Profil Desa (Admin) ===
 function updateProfilDesa() {
-  const data = {
-    namaDesa: document.getElementById("nama-desa")?.value || "",
-    kecamatan: document.getElementById("kecamatan")?.value || "",
-    kabupaten: document.getElementById("kabupaten")?.value || "",
-    provinsi: document.getElementById("provinsi")?.value || "",
-    kodePos: document.getElementById("kode-pos")?.value || "",
-    sejarah: document.getElementById("sejarah-singkat")?.value || "",
-    visi: document.getElementById("visi")?.value || "",
-    misi: Array.from(document.querySelectorAll("#misi-list input")).map(input => input.value).filter(val => val.trim()),
-    potensi: Array.from(document.querySelectorAll("#potensi-list input")).map(input => input.value).filter(val => val.trim()),
-    struktur: Array.from(document.querySelectorAll("#struktur-list input")).map(input => input.value).filter(val => val.trim()),
-    alamat: document.getElementById("alamat")?.value || "",
-    telepon: document.getElementById("telepon")?.value || "",
-    email: document.getElementById("email")?.value || "",
+  if (!db) {
+    showMessage("Database tidak tersedia", "error");
+    return;
+  }
+
+  const saveBtn = document.querySelector(".save-btn");
+  if (!saveBtn) return;
+  
+  saveBtn.classList.add("loading");
+  saveBtn.textContent = "Menyimpan...";
+  saveBtn.disabled = true;
+
+  const profilData = {
+    namaDesa: document.getElementById("nama-desa").value.trim(),
+    kecamatan: document.getElementById("kecamatan").value.trim(),
+    kabupaten: document.getElementById("kabupaten").value.trim(),
+    provinsi: document.getElementById("provinsi").value.trim(),
+    kodePos: document.getElementById("kode-pos").value.trim(),
+    sejarah: document.getElementById("sejarah-singkat").value.trim(),
+    visi: collectVisiData(), // Sesuai dengan ID di HTML
+    misi: collectMisiData(),
+    potensi: collectPotensiData(),
+    struktur: collectStrukturData(),
+    alamat: document.getElementById("alamat").value.trim(),
+    telepon: document.getElementById("telepon").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  db.collection("profil").doc("desaBanyusri").update(data)
-    .then(() => alert("Profil berhasil diperbarui!"))
-    .catch(err => alert("Gagal update: " + err.message));
+  // Validate required fields
+  if (!profilData.namaDesa || !profilData.kecamatan || !profilData.kabupaten || !profilData.provinsi) {
+    showMessage("Mohon lengkapi data umum desa (Nama Desa, Kecamatan, Kabupaten, Provinsi)", "error");
+    resetSaveButton();
+    return;
+  }
+
+  // Save to Firestore
+  db.collection("profil").doc("desaBanyusri").set(profilData)
+    .then(() => {
+      console.log("Profile data saved successfully");
+      showMessage("Profil desa berhasil disimpan!", "success");
+      resetSaveButton();
+    })
+    .catch(error => {
+      console.error("Error saving profile:", error);
+      showMessage("Gagal menyimpan profil desa: " + error.message, "error");
+      resetSaveButton();
+    });
+}
+
+function resetSaveButton() {
+  const saveBtn = document.querySelector(".save-btn");
+  if (saveBtn) {
+    saveBtn.classList.remove("loading");
+    saveBtn.textContent = "Simpan Perubahan";
+    saveBtn.disabled = false;
+  }
+}
+
+// Show message function
+function showMessage(message, type) {
+  const container = document.getElementById("message-container");
+  if (!container) return;
+  
+  const messageDiv = document.createElement("div");
+  messageDiv.className = `message ${type}`;
+  messageDiv.textContent = message;
+  
+  // Add some basic styling
+  messageDiv.style.padding = "10px";
+  messageDiv.style.margin = "10px 0";
+  messageDiv.style.borderRadius = "5px";
+  messageDiv.style.border = "1px solid";
+  
+  if (type === "success") {
+    messageDiv.style.backgroundColor = "#d4edda";
+    messageDiv.style.color = "#155724";
+    messageDiv.style.borderColor = "#c3e6cb";
+  } else if (type === "error") {
+    messageDiv.style.backgroundColor = "#f8d7da";
+    messageDiv.style.color = "#721c24";
+    messageDiv.style.borderColor = "#f5c6cb";
+  } else if (type === "info") {
+    messageDiv.style.backgroundColor = "#d1ecf1";
+    messageDiv.style.color = "#0c5460";
+    messageDiv.style.borderColor = "#bee5eb";
+  }
+  
+  container.innerHTML = "";
+  container.appendChild(messageDiv);
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    if (container.contains(messageDiv)) {
+      container.removeChild(messageDiv);
+    }
+  }, 5000);
 }
 
 // === Pengumuman (Admin) ===
@@ -420,7 +689,7 @@ if (pengaduanForm) {
 
     db.collection("pengaduan").add({
       nama: nama.trim(),
-      email: user.email, // <-- TAMBAHKAN INI!
+      email: user.email,
       isi: isi.trim(),
       timestamp: new Date(),
       status: "belum dibaca"
@@ -485,30 +754,6 @@ if (namaField) {
   });
 }
 
-// === Load Profil for Admin Edit ===
-function loadProfil() {
-  db.collection("profil").doc("desaBanyusri").get()
-    .then(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        
-        const fields = [
-          'nama-desa', 'kecamatan', 'kabupaten', 'provinsi', 
-          'kode-pos', 'sejarah-singkat', 'visi', 'alamat', 'telepon', 'email'
-        ];
-        
-        fields.forEach(fieldId => {
-          const element = document.getElementById(fieldId);
-          if (element) {
-            const dataKey = fieldId.replace('-', '');
-            element.value = data[dataKey] || data[fieldId.replace('-', '')] || '';
-          }
-        });
-      }
-    })
-    .catch(err => console.error("Gagal memuat profil: ", err));
-}
-
 // === Auto Logout Timer ===
 function startLogoutTimer() {
   resetLogoutTimer();
@@ -528,6 +773,7 @@ function resetLogoutTimer() {
 auth.onAuthStateChanged((user) => {
   const path = window.location.pathname;
   const halamanDilindungi = path.includes("admin") || path.includes("user") || path.includes("dashboard") || path.includes("dashboard-admin") || path.includes("layanan") || path.includes("layanan-admin")|| path.includes("pengaduan") || path.includes("pengaduan-admin") || path.includes("pengumuman") || path.includes("[pengumuman-admin]") || path.includes("profil") || path.includes("profil-admin") || path.includes("warga-admin") ;
+  
   if (user) {
     console.log("User terdeteksi: ", user.email);
 
@@ -566,11 +812,11 @@ auth.onAuthStateChanged((user) => {
       window.addEventListener("click", resetLogoutTimer);
 
       // Load data sesuai halaman
-      if (typeof loadProfilDesa === 'function' && document.getElementById("nama-desa")) {
+      if (typeof loadProfilDesa === 'function' && document.getElementById("nama-desa") && !path.includes("admin")) {
         loadProfilDesa();
       }
-      if (typeof loadProfil === 'function' && path.includes("admin") && document.getElementById("nama-desa")) {
-        loadProfil();
+      if (typeof loadProfilData === 'function' && path.includes("profil-admin")) {
+        loadProfilData();
       }
       if (typeof loadPengaduan === 'function' && document.getElementById("pengaduan-table-body")) {
         loadPengaduan();
@@ -626,7 +872,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById("layanan-table-body")) {
     loadLayanan();
   }
-});// Error handler global
+});
+
+// Error handler global
 window.addEventListener('unhandledrejection', function(event) {
   console.error('Unhandled promise rejection:', event.reason);
   alert('Terjadi kesalahan sistem. Silakan coba lagi.');

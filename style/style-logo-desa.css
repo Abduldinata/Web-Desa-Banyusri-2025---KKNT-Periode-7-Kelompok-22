@@ -1,0 +1,43 @@
+  .logo-desa {
+  opacity: 0;
+  transition: opacity 1s ease;
+  height: 60px;
+  vertical-align: middle;
+  margin-right: 16px;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background-color: #fff;
+  border: 2px solid #667eea; /* Tambahkan border */
+  padding: 4px; /* Tambahkan padding */
+  box-sizing: border-box; /* Pastikan padding tidak menambah ukuran keseluruhan */
+  cursor: pointer; /* Tambahkan cursor pointer */
+}
+.header-logo-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  margin: 0 auto;
+  margin-bottom: 12px;    /* Tambahkan jarak bawah */
+}
+.header-logo-title:hover {
+  color: #667eea;
+  text-decoration: underline;
+}
+.header-logo-title:hover .logo-desa {
+  transform: scale(1.1);
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  padding-bottom: 10px;
+  padding-top: 6px;       /* Tambahkan jarak atas */
+}

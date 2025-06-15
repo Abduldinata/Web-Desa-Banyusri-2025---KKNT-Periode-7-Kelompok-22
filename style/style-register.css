@@ -1,79 +1,103 @@
 /* GENERAL */
 body {
-  background-color: #e1f5fe; /* biru muda lembut */
+  background: linear-gradient(135deg, #e1e8f7 0%, #f4f7fa 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height:110vh;
   margin: 0;
 }
 
 header {
-  background-color: #0288d1;
-  color: white;
-  padding: 20px;
+  background-color: #667eea;
+  color: #fff;
+  padding: 24px 0 18px 0;
   width: 100%;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(102,126,234,0.08);
 }
 
 h1 {
   margin-bottom: 20px;
-  color: #0288d1;
+  color: #667eea;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 form {
-  background-color: white;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background-color: #fff;
+  padding: 32px 40px 28px 40px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(102,126,234,0.10);
   width: 100%;
   max-width: 400px;
+  border: 1.5px solid #e3e8f7;
 }
 
 form input {
   width: 100%;
-  border: 1px solid #0288d1;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-  font-size: 14px;
+  border: 1.5px solid #667eea;
+  padding: 12px;
+  margin: 12px 0 18px 0;
+  border-radius: 6px;
+  font-size: 15px;
+  background: #f4f7fa;
+  color: #222;
+  transition: border-color 0.2s;
+}
+
+form input:focus {
+  border-color: #0288d1;
+  outline: none;
+  background: #fff;
 }
 
 form button {
   width: 100%;
-  background-color: #0288d1;
-  color: white;
-  padding: 12px;
+  background: linear-gradient(90deg, #667eea 60%, #0288d1 100%);
+  color: #fff;
+  padding: 13px;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 form button:hover {
-  background-color: #0277bd;
+  background: linear-gradient(90deg, #0288d1 0%, #667eea 100%);
+  box-shadow: 0 4px 16px rgba(2,136,209,0.10);
 }
 
 p {
-  margin-top: 15px;
+  margin-top: 18px;
+  color: #444;
 }
 
 p a {
-  color: #0288d1;
+  color: #667eea;
   text-decoration: none;
   font-weight: bold;
+  transition: color 0.2s;
 }
 
 p a:hover {
+  color: #0288d1;
   text-decoration: underline;
 }
 
 small {
   display: block;
-  margin-top: 10px;
-  color: #555;
+  margin-top: 12px;
+  color: #888;
+}
+
+#logout-btn[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
 }

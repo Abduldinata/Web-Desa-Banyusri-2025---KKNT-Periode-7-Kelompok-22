@@ -3,18 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Warga - Admin Desa Banyusri</title>
+  <title>Data Pengguna Admin - Desa Banyusri</title>
   <link rel="stylesheet" href="../style/style-warga-admin.css" />
-  <link rel="icon" href="../assets/logo-desa.png" type="image/png">
-  
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="../js/firebase-config.js"></script>
+  <link rel="stylesheet" href="../style/style-logo-desa.css" />
 </head>
 <body>
   <header>
-    <h1>Data Pengguna (Warga dan Admin)</h1>
+    <div class="header-logo-title">
+    <img src="../assets/logo-desa.png" alt="Logo Desa Banyusri" class="logo-desa" style="height:60px;vertical-align:middle;margin-right:16px;">
+    <h1 style="display:inline-block;vertical-align:middle;">Data Pengguna Desa Banyusri</h1>
+    </div>
     <nav>
       <a href="dashboard-admin.html">🏠 Dashboard</a>
       <a href="profil-admin.html">📋 Profil Desa</a>
@@ -43,9 +41,18 @@
     </table>
     <div id="status"></div>
   </main>
+  <footer>
+    <p>&copy; 2025 Desa Banyusri - KKN Kelompok 22 Periode 7</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/script.js"></script>
+  
   <script>
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+
     const tableBody = document.getElementById("user-table-body");
     const status = document.getElementById("status");
 
